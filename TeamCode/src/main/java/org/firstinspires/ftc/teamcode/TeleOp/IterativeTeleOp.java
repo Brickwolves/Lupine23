@@ -75,7 +75,7 @@ public class IterativeTeleOp extends OpMode {
                                                     */
 
 
-
+        gyro.update();
 
 
 
@@ -83,6 +83,7 @@ public class IterativeTeleOp extends OpMode {
              ----------- L O G G I N G -----------
                                                 */
         multTelemetry.addData("Status", "TeleOp Running");
+        multTelemetry.addData("GYRO128", gyro.angle());
         multTelemetry.update();
     }
 

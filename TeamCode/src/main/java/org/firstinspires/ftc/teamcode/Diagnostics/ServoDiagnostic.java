@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Utilities.OpModeUtils;
 import org.firstinspires.ftc.teamcode.Controls.ButtonControls;
 
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_DN;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_UP;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_ServoDiagnostic.SERVO_HOME;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_ServoDiagnostic.SERVO_ID;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_ServoDiagnostic.SERVO_MAX;
@@ -17,7 +19,7 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TOUCH
 
 @Disabled
 @TeleOp(name = "ServoDiag TeleOp", group="Linear TeleOp")
-public class ServoDiag extends LinearOpMode {
+public class ServoDiagnostic extends LinearOpMode {
 
     private ButtonControls BC;
 
@@ -58,11 +60,11 @@ public class ServoDiag extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            if (gamepad1.dpad_up) {
+            if (BC.get(DPAD_UP, DOWN)) {
                 servo.setPosition(SERVO_MAX);
                 status = "MAX";
             }
-            if (gamepad1.dpad_down) {
+            if (BC.get(DPAD_DN, DOWN)) {
                 servo.setPosition(SERVO_MIN);
                 status = "MIN";
             }
@@ -81,7 +83,6 @@ public class ServoDiag extends LinearOpMode {
                 break;
             }
         }
-
     }
 }
 
