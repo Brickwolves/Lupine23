@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.Controls.ButtonControls;
 import org.firstinspires.ftc.teamcode.Utilities.OpModeUtils;
 
 @Disabled
-@TeleOp(name = "ServoDiag TeleOp", group="Linear TeleOp")
+@TeleOp(name = "DCMotorDiag TeleOp", group="Linear TeleOp")
 public class DCMotorDiagnostic extends LinearOpMode {
 
     private ButtonControls BC;
