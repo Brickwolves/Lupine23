@@ -16,7 +16,6 @@ public class IterativeTeleOp extends OpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private Gyro gyro;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -24,7 +23,9 @@ public class IterativeTeleOp extends OpMode {
     public void init() {
         setOpMode(this);
 
-        gyro = new Gyro(0, "imu");
+        /*
+                    Y O U R   C O D E   H E R E
+                                                   */
 
         multTelemetry.addData("Status", "Initialized");
         multTelemetry.update();
@@ -58,7 +59,6 @@ public class IterativeTeleOp extends OpMode {
                                                    */
 
         multTelemetry.addData("Status", "Started");
-        multTelemetry.addData("GYRO128", gyro.angle());
         multTelemetry.update();
     }
 
@@ -69,21 +69,13 @@ public class IterativeTeleOp extends OpMode {
     public void loop() {
 
         /*
-
                     Y O U R   C O D E   H E R E
-
                                                     */
-
-
-        gyro.update();
-
-
 
         /*
              ----------- L O G G I N G -----------
                                                 */
         multTelemetry.addData("Status", "TeleOp Running");
-        multTelemetry.addData("GYRO128", gyro.angle());
         multTelemetry.update();
     }
 

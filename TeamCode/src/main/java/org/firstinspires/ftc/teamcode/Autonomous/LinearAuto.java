@@ -37,7 +37,6 @@ public class LinearAuto extends LinearOpMode
         multTelemetry.update();
         waitForStart();
 
-
         if (opModeIsActive()){
 
             /*
