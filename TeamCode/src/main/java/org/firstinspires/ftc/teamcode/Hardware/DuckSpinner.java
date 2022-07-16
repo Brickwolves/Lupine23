@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
-public class Hopper {
+public class DuckSpinner {
 
     /*
 
