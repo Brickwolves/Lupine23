@@ -27,34 +27,12 @@ public class IterativeTeleOp extends OpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 
-    private Controller controller;
-    private Robot robot;
-
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
         setOpMode(this);
-
-        robot = new Robot();
-        controller = new Controller(gamepad1);
-
-        // DuckSpinner Controls
-        controller.add(CROSS, DOWN, robot.duckSpinner::spin);
-        controller.add(CROSS, UP, robot.duckSpinner::stop);
-
-        // Also thought of two ways of doing the dropper controls
-
-        // Method 1) Dropper Controls with simple controls
-        controller.add(CROSS, TOGGLE, robot.dropper::drop);
-        controller.add(CROSS, NOT_TOGGLED, robot.dropper::hold);
-
-        // Method 2) Dropper Controls for a State Machine
-        robot.dropper.setControls(
-                () -> controller.buttons.get(CROSS, TAP),       // Controls Grip
-                () -> controller.buttons.get(TRIANGLE, TOGGLE)  // Controls Drop
-        );
 
         /*
                     Y O U R   C O D E   H E R E
@@ -101,11 +79,6 @@ public class IterativeTeleOp extends OpMode {
     @Override
     public void loop() {
 
-        // Method 1 for updating dropper and any other subsystems
-        Controller.update();
-
-        // Method 2 for updating dropper state machine
-        robot.dropper.update();
 
         /*
                     Y O U R   C O D E   H E R E
