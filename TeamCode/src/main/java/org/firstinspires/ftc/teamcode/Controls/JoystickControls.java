@@ -74,14 +74,7 @@ public class JoystickControls {
         Objects.requireNonNull(joysticks.get(input)).setShift(shiftValue);
     }
 
-
-    public static void update(){
-        for (JoystickControls c : instances) {
-            c.updateInstance();
-        }
-    }
-
-    private void updateInstance(){
+    public void update(){
         for (Joystick b : joysticks.values()) {
             b.update();
         }

@@ -10,6 +10,8 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry
 public class Robot {
 
    public IMU imu;
+   public DuckSpinner duckSpinner;
+   public Dropper dropper;
 
    public static ElapsedTime time = new ElapsedTime();
 

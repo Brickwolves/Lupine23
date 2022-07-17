@@ -35,6 +35,7 @@ public class ButtonControls {
 
     public enum ButtonState {
         TOGGLE,
+        NOT_TOGGLED,
         TAP,
         DOWN,
         UP
@@ -78,17 +79,13 @@ public class ButtonControls {
                 return button.tap;
             case TOGGLE:
                 return button.toggle;
+            case NOT_TOGGLED:
+                return !button.toggle;
         }
         return false;
     }
 
-    public static void update(){
-        for (ButtonControls c : instances) {
-            c.updateInstance();
-        }
-    }
-
-    private void updateInstance(){
+    public void update(){
         for (Button b : buttons.values()) {
             b.update();
         }
