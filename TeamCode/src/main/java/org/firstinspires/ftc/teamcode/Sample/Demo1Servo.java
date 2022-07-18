@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.Sample;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
+@Disabled
 @TeleOp(name="Servo Demo", group="Iterative Opmode")
 public class Demo1Servo extends OpMode {
 	

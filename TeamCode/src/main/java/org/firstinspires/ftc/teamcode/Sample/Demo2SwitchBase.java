@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.Sample;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
+@Disabled
 @TeleOp(name="Switch Demo 1", group="Iterative Opmode")
 public class Demo2SwitchBase extends OpMode {
 	

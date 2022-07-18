@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Sample;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -12,6 +13,7 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB2;
 
 
+@Disabled
 @TeleOp(name="Switch Demo 3", group="Iterative Opmode")
 public class Demo4ArmStateMachine extends OpMode {
 	

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Sample;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,6 +10,7 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.CIRCLE;
 
 
+@Disabled
 @TeleOp(name="Switch Demo 2", group="Iterative Opmode")
 public class Demo3SwitchConditionals extends OpMode {
 	
