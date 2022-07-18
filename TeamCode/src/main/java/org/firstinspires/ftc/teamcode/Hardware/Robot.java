@@ -6,12 +6,10 @@ import org.firstinspires.ftc.teamcode.Hardware.Sensors.IMU;
 
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
-
+/**
+ * A class for containing an FTC Mecanum robot
+ */
 public class Robot {
-
-   public IMU imu;
-   public DuckSpinner duckSpinner;
-   public Dropper dropper;
 
    public static ElapsedTime time = new ElapsedTime();
 
@@ -19,19 +17,22 @@ public class Robot {
       initRobot();
    }
 
+   /**
+    * Initializes the robot's necessary subsystems and motors
+    */
    public void initRobot() {
 
       /*
             I N I T   M O T O R S
        */
 
-      imu      = new IMU("imu");
 
       multTelemetry.addData("Status", "Initialized");
       multTelemetry.update();
    }
 
    /**
+    * Sets the same power to all four motors
     * @param power
     */
    public void setAllPower(double power){
@@ -43,6 +44,7 @@ public class Robot {
    }
 
    /**
+    * Sets the power to the motors for driving with a mecanum drivetrain
     * @param power
     */
    public void setDrivePower(double drive, double strafe, double turn, double power){
@@ -55,7 +57,7 @@ public class Robot {
 
 
    /**
-    * IMPLEMENT ME
+    * Translates the robot autonomously a certain distance known as ticks
     * @param ticks
     */
    public void strafe(double ticks){
@@ -67,7 +69,7 @@ public class Robot {
    }
 
    /**
-    * IMPLEMENT ME
+    * Rotates the robot autonomously a certain number of degrees with a margin of error
     * @param degrees
     * @param moe
     */
@@ -81,6 +83,8 @@ public class Robot {
 
 
    /**
+    * A mathematical function that optimizes the ramping of power to the motors during autonomous
+    * strafes.
     * @param position
     * @param distance
     * @param acceleration

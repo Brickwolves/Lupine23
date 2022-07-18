@@ -7,6 +7,10 @@ import org.firstinspires.ftc.teamcode.Utilities.Task;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A wrapper class for the Gamepad that may look complicated but I swear it actually
+ * simplifies your life 10-fold
+ */
 public class Controller {
 
     public Gamepad src;
@@ -15,10 +19,13 @@ public class Controller {
     public List<Control> controls = new ArrayList<>();
     public static List<Controller> controllerInstances = new ArrayList<>();
 
+    /**
+     * An innerclass for associating each Input and ButtonState with a Task
+     */
     public class Control {
-        private ButtonControls.Input input;
-        private ButtonControls.ButtonState buttonState;
-        private Task task;
+        private final ButtonControls.Input input;
+        private final ButtonControls.ButtonState buttonState;
+        private final Task task;
 
         public Control(ButtonControls.Input input, ButtonControls.ButtonState buttonState, Task task){
             this.input = input;
@@ -26,28 +33,56 @@ public class Controller {
             this.task = task;
 
         }
+
+        /**
+         * Executes the given task only if the current button's state is true
+         */
         public void update(){
             if (buttons.get(input, buttonState)) task.execute();
         }
     }
 
+    /**
+     * Constructor for the Controller class
+     * @param gamepad - a Gamepad from an OpMode
+     */
     public Controller(Gamepad gamepad){
         this.src = gamepad;
+
+        // Instantiate new ButtonControl and JoystickControls so we can have added functionality
+        // for our controller
         this.buttons = new ButtonControls(gamepad);
         this.joysticks = new JoystickControls(gamepad);
+
+        // Add the current controller instance to a static list so that all we may call
+        // Controller.update() once each TeleOp loop to automatically update all controllers
         Controller.controllerInstances.add(this);
     }
 
+    /**
+     * Associates the given Input and that input's ButtonState with a Task to be completed
+     * @param input - an Input specifying what button to check
+     * @param state - a ButtonState specifying what state to check on the input
+     * @param task - a Task implementation specifying what task to be completed every time the
+     *               button and state are found to be true
+     */
     public void add(ButtonControls.Input input, ButtonControls.ButtonState state, Task task){
         this.controls.add(new Control(input, state, task));
     }
 
+    /**
+     * Executes each stored task only if the associated button and state are true
+     */
     private void updateTasks(){
         for (Control control : controls){
             control.update();
         }
     }
 
+    /**
+     * Updates every instantiated controller by updating its buttons, joysticks, and then completing
+     * any tasks depending upon its new state
+     */
     public static void update(){
         for (Controller controller : controllerInstances){
             controller.buttons.update();

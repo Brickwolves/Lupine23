@@ -41,16 +41,20 @@ public class ButtonControls {
         UP
     }
 
+    // A HashMap or dictionary associating each Input enum (CROSS, TRIANGLE,...etc) with
+    // a Button class that automates all the calculations for Button States such as
+    // (TOGGLE, NOT_TOGGLED, TAP, DOWN, UP)
     private Map<Input, Button> buttons = new HashMap<>();
-    private static List<ButtonControls> instances = new ArrayList<>();
+
+    // An interface for storing references to Gamepad attributes
     public interface ButtonCheck { boolean check(); }
 
     public Gamepad src;
     public ButtonControls(Gamepad gamepad){
         src = gamepad;
 
-        instances.add(this);
-
+        // Stores every Input enum with a button, and each button stores a reference of the
+        // gamepad's button attribute in memory so it always knows where to check
         buttons.put(Input.TRIANGLE,   new Button(() -> src.triangle));
         buttons.put(Input.SQUARE,     new Button(() -> src.square));
         buttons.put(Input.CROSS,      new Button(() -> src.cross));
@@ -67,6 +71,12 @@ public class ButtonControls {
         buttons.put(Input.RB2,        new Button(() -> src.right_trigger > 0.75));
     }
 
+    /**
+     * Retrieves the given button's current state
+     * @param input - an Input enum used to specify what button to check
+     * @param buttonState - a ButtonState enum specifying what state to retrieve
+     * @return true if the current button and state are being pressed, false otherwise
+     */
     public boolean get(Input input, ButtonState buttonState) {
         Button button = buttons.get(input);
         if (button == null) return false;
@@ -85,11 +95,18 @@ public class ButtonControls {
         return false;
     }
 
+    /**
+     * Updates all buttons in the ButtonController
+     */
     public void update(){
         for (Button b : buttons.values()) {
             b.update();
         }
     }
 
+    /**
+     * Checks whether the DPAD is being pressed at all
+     * @return true if any DPAD buttons are pressed, false otherwise
+     */
     public boolean DPADPress() { return src.dpad_down || src.dpad_left || src.dpad_right || src.dpad_up; }
 }
