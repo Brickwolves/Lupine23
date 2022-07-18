@@ -71,6 +71,26 @@ public class Controller {
     }
 
     /**
+     * Gets the given input and input's state from the buttons
+     * @param input - an Input specifying what button to check
+     * @param buttonState - a ButtonState specifying what state to check on the input
+     * @return true if the specified button is pressed, false otherwise
+     */
+    public boolean get(ButtonControls.Input input, ButtonControls.ButtonState buttonState){
+        return buttons.get(input, buttonState);
+    }
+
+    /**
+     * Gets the given input and input's state from the joysticks
+     * @param input - an Input specifying what joystick to check
+     * @param value - a Value specifying what value of the joystick to check on the input
+     * @return a double representing the value of the given input
+     */
+    public double get(JoystickControls.Input input, JoystickControls.Value value){
+        return joysticks.get(input, value);
+    }
+
+    /**
      * Executes each stored task only if the associated button and state are true
      */
     private void updateTasks(){
