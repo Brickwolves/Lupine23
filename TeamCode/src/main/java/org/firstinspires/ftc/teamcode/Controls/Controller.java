@@ -72,7 +72,7 @@ public class Controller {
 
     /**
      * Gets the given input and input's state from the buttons
-     * @param input - an Input specifying what button to check
+     * @param input - a ButtonControls.Input specifying what button to check
      * @param buttonState - a ButtonState specifying what state to check on the input
      * @return true if the specified button is pressed, false otherwise
      */
@@ -82,7 +82,7 @@ public class Controller {
 
     /**
      * Gets the given input and input's state from the joysticks
-     * @param input - an Input specifying what joystick to check
+     * @param input - a JoystickControls.Input specifying what joystick to check
      * @param value - a Value specifying what value of the joystick to check on the input
      * @return a double representing the value of the given input
      */
