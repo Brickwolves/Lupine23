@@ -60,6 +60,15 @@ public class Controller {
     }
 
     /**
+     * Sets the shift angle for a given stick
+     * @param input - a JoystickControls.Input to shift
+     * @param shiftAngle - a double representing the angle to shift by
+     */
+    public void setJoystickShift(JoystickControls.Input input, double shiftAngle){
+        this.joysticks.setShifted(input, shiftAngle);
+    }
+
+    /**
      * Associates the given Input and that input's ButtonState with a Task to be completed
      * @param input - an Input specifying what button to check
      * @param state - a ButtonState specifying what state to check on the input
