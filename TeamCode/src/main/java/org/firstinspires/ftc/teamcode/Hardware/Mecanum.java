@@ -1,13 +1,43 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Mecanum {
     /**
      * Initializes the robot's necessary subsystems and motors
      */
+    //constructor
+    public Mecanum(){
+        initMecanum();
+    }
+
+    private ElapsedTime runtime = new ElapsedTime();
+    DcMotor fl;
+    DcMotor fr;
+    DcMotor bl;
+    DcMotor br;
+
     public void initMecanum(){
 
+        fl = hardwareMap.get(DcMotor.class, "fl");
+        fl.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        fr = hardwareMap.get(DcMotor.class, "fr");
+        fr.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        bl = hardwareMap.get(DcMotor.class, "bl");
+        bl.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        br = hardwareMap.get(DcMotor.class, "br");
+        br.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        multTelemetry.addData("Status", "Initialized");
+        multTelemetry.update();
     }
 
     /**
@@ -20,6 +50,10 @@ public class Mecanum {
                 Y O U R   C O D E   H E R E
 
          */
+        fl.setPower(power);
+        fr.setPower(power);
+        bl.setPower(power);
+        br.setPower(power);
     }
 
     /**
@@ -32,6 +66,15 @@ public class Mecanum {
                 Y O U R   C O D E   H E R E
 
          */
+        double frPower = (drive - strafe - turn) * power;
+        double flPower = (drive + strafe + turn) * power;
+        double brPower = (drive + strafe - turn) * power;
+        double blPower = (drive - strafe + turn) * power;
+
+        fl.setPower(flPower);
+        fr.setPower(frPower);
+        bl.setPower(blPower);
+        br.setPower(brPower);
     }
 
 
@@ -58,6 +101,7 @@ public class Mecanum {
                 Y O U R   C O D E   H E R E
 
          */
+
     }
 
 
