@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.Diagnostics;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Utilities.OpModeUtils;
 import org.firstinspires.ftc.teamcode.Controls.ButtonControls;
 
@@ -17,11 +17,10 @@ import static org.firstinspires.ftc.teamcode.DashConstants.Dash_ServoDiagnostic.
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.DOWN;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TOUCHPAD;
 
-@Disabled
-@TeleOp(name = "ServoDiag TeleOp", group="Linear TeleOp")
+@TeleOp(name = "ServoDiagnostic TeleOp", group="Linear TeleOp")
 public class ServoDiagnostic extends LinearOpMode {
 
-    private ButtonControls BC;
+    private Controller controller;
 
     private Servo servo;
     private String servo_id = SERVO_ID;
@@ -30,7 +29,7 @@ public class ServoDiagnostic extends LinearOpMode {
 
     public void initialize() {
         OpModeUtils.setOpMode(this);
-        BC = new ButtonControls(gamepad1);
+        controller = new Controller(gamepad1);
 
 
         servo = OpModeUtils.hardwareMap.get(Servo.class, servo_id);
@@ -59,12 +58,13 @@ public class ServoDiagnostic extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+            Controller.update();
 
-            if (BC.get(DPAD_UP, DOWN)) {
+            if (controller.get(DPAD_UP, DOWN)) {
                 servo.setPosition(SERVO_MAX);
                 status = "MAX";
             }
-            if (BC.get(DPAD_DN, DOWN)) {
+            if (controller.get(DPAD_DN, DOWN)) {
                 servo.setPosition(SERVO_MIN);
                 status = "MIN";
             }
@@ -78,7 +78,7 @@ public class ServoDiagnostic extends LinearOpMode {
 
             // S H U T D O W N     S E Q U E N C E
 
-            if (BC.get(TOUCHPAD, DOWN)){
+            if (controller.get(TOUCHPAD, DOWN)){
                 shutdown();
                 break;
             }
