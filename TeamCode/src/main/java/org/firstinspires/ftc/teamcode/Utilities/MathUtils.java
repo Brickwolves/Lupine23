@@ -8,11 +8,10 @@ import org.opencv.core.Point;
 
 import static java.lang.Math.sqrt;
 import static java.lang.Math.toRadians;
+import static java.lang.StrictMath.floorMod;
 import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.angleMode.RADIANS;
 
 public class MathUtils {
-
-
 
     /**
      * @param targetAngle
@@ -21,19 +20,10 @@ public class MathUtils {
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static double closestAngle(double targetAngle, double currentAngle) {
-        return 0;
+        double simpleTargetDelta = floorMod(Math.round((360 - targetAngle) + currentAngle), 360);
+        double alternateTargetDelta = -1 * (360 - simpleTargetDelta);
+        return StrictMath.abs(simpleTargetDelta) <= StrictMath.abs(alternateTargetDelta) ? currentAngle - simpleTargetDelta : currentAngle - alternateTargetDelta;
     }
-
-
-    public static Point shift(Point p, double shiftAngle){
-        return new Point(0, 0);
-    }
-
-
-
-
-
-
 
     /**
      * @param x
