@@ -1,39 +1,32 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import com.wolfpackmachina.bettersensors.Sensors.Gyro;
-
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.DOWN;
-import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.NOT_TOGGLED;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.TAP;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.TOGGLE;
-import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.UP;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.CIRCLE;
-import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.CROSS;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_DN;
-import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TRIANGLE;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_L;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_R;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_UP;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIGHT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_X;
-import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_Y;
-import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_Y;
-import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_Y;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
 import org.firstinspires.ftc.teamcode.Controls.Controller;
-import org.firstinspires.ftc.teamcode.Controls.JoystickControls;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
-import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
+import org.firstinspires.ftc.teamcode.Utilities.DuckSpeed;
 
 //@Disabled
 @TeleOp(name="Iterative TeleOp", group="Iterative Opmode")
@@ -48,7 +41,7 @@ public class IterativeTeleOp extends OpMode {
     private boolean wasTurning;
 
     // Declare OpMode members.
-
+    CRServo duck;
     //    DcMotor flmotor;
 //    DcMotor frmotor;
 //    DcMotor blmotor;
@@ -145,10 +138,28 @@ public class IterativeTeleOp extends OpMode {
             }
             rotation = correction;
         }
-
-        if(controller.get(DPAD_DN, TAP)){
-            setPoint = MathUtils.closestAngle(180, greg.gyro.getAngle());
+        if(controller.get(CIRCLE, DOWN) && controller.get(RB1, TOGGLE)){
+            greg.duck.spin(1);
         }
+        else if(controller.get(CIRCLE, DOWN) && !controller.get(RB1, TOGGLE)){
+            greg.duck.spin(-1);
+        }
+        else{
+            greg.duck.spin(0);
+        }
+        if(controller.get(DPAD_R, TAP)){
+            setPoint += 90;
+        }
+        else if(controller.get(DPAD_L, TAP)){
+            setPoint += -90;
+        }
+        else if(controller.get(DPAD_UP, TAP)){
+            setPoint += 0;
+        }
+        else if(controller.get(DPAD_DN, TAP)){
+            setPoint += 180;
+        }
+        else
 
 
 
@@ -170,7 +181,7 @@ public class IterativeTeleOp extends OpMode {
         multTelemetry.addData("Status", "TeleOp Running");
         multTelemetry.addData("Angle", greg.gyro.getAngle());
         multTelemetry.addData("SetPoint", setPoint);
-        multTelemetry.addData("Correction", correction);
+        multTelemetry.addData("toggle", controller.get(RB1, TOGGLE));
         multTelemetry.update();
     }
 

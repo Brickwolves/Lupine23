@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
@@ -17,7 +18,7 @@ public class Robot {
 
    public IMU gyro;
 
-
+   public DuckSpinner duck;
    public Robot(){
       initRobot();
    }
@@ -30,6 +31,7 @@ public class Robot {
 
       //initialized Mecanum
       drivetrain = new Mecanum();
+      duck = new DuckSpinner("duck");
 
       gyro = new IMU( "imu");
 
