@@ -31,8 +31,12 @@ public class Button {
         up = !down;
         tap = (!pressed_last_cycle && down && time.seconds() > waitTime);
         if (tap) {
+            pressed_last_cycle = true;
             toggle = !toggle;
             time.reset();
+        }
+        else {
+            pressed_last_cycle = false;
         }
     }
 
