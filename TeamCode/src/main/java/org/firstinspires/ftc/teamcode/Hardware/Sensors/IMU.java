@@ -24,7 +24,7 @@ public class IMU {
         startAngle = getAngle();
         previousAngle = null;
         deltaAngle = 0;
-        offsetAngle = 180;
+        offsetAngle = 0;
 
     }
 
