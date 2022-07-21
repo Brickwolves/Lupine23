@@ -15,9 +15,12 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_R;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_UP;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB2;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIGHT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_X;
+import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_Y;
+import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_Y;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
@@ -138,15 +141,16 @@ public class IterativeTeleOp extends OpMode {
             }
             rotation = correction;
         }
-        if(controller.get(CIRCLE, DOWN) && controller.get(RB1, TOGGLE)){
+        if(controller.get(CIRCLE, DOWN) && controller.get(RB2, TOGGLE)){
             greg.duck.spin(1);
         }
-        else if(controller.get(CIRCLE, DOWN) && !controller.get(RB1, TOGGLE)){
+        else if(controller.get(CIRCLE, DOWN) && !controller.get(RB2, TOGGLE)){
             greg.duck.spin(-1);
         }
         else{
             greg.duck.spin(0);
         }
+        /*
         if(controller.get(DPAD_R, TAP)){
             setPoint += 90;
         }
@@ -159,14 +163,17 @@ public class IterativeTeleOp extends OpMode {
         else if(controller.get(DPAD_DN, TAP)){
             setPoint += 180;
         }
-        else
+        else */
+        if (controller.get(RB1, TOGGLE)){
+            greg.dropper.drop();
+        }
 
 
 
         controller.setJoystickShift(LEFT, greg.gyro.getAngle());
 
-        double drive = controller.get(LEFT, SHIFTED_Y);
-        double strafe = controller.get(LEFT, INVERT_SHIFTED_X);
+        double drive = controller.get(LEFT, INVERT_SHIFTED_Y);
+        double strafe = controller.get(LEFT, SHIFTED_X);
 
 
 

@@ -17,7 +17,7 @@ public class Robot {
    public Mecanum drivetrain;
 
    public IMU gyro;
-
+   public Dropper dropper;
    public DuckSpinner duck;
    public Robot(){
       initRobot();
@@ -30,6 +30,7 @@ public class Robot {
        */
 
       //initialized Mecanum
+      dropper = new Dropper("righdropper", "leftdropper");
       drivetrain = new Mecanum();
       duck = new DuckSpinner("duck");
 
