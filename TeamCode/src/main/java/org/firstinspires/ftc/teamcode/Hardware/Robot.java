@@ -13,9 +13,9 @@ import org.firstinspires.ftc.teamcode.Hardware.Sensors.IMU;
 public class Robot {
 
    public static ElapsedTime time = new ElapsedTime();
-
+   public Sweeper sweeper;
    public Mecanum drivetrain;
-
+   public Grabber grabber;
    public IMU gyro;
    public Dropper dropper;
    public DuckSpinner duck;
@@ -30,7 +30,9 @@ public class Robot {
        */
 
       //initialized Mecanum
-      dropper = new Dropper("righdropper", "leftdropper");
+      sweeper = new Sweeper("sweeper");
+      grabber = new Grabber("rightgrabber", "leftgrabber");
+      dropper = new Dropper("rightdropper", "leftdropper");
       drivetrain = new Mecanum();
       duck = new DuckSpinner("duck");
 

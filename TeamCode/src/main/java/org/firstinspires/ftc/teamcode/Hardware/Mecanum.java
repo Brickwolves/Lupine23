@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.opencv.core.Point;
+
 public class Mecanum {
     /**
      * Initializes the robot's necessary subsystems and motors
@@ -38,6 +40,11 @@ public class Mecanum {
 
         multTelemetry.addData("Status", "Initialized");
         multTelemetry.update();
+    }
+    public Point getPosition(){
+        double yDist = (fr.getCurrentPosition() + fl.getCurrentPosition() + br.getCurrentPosition() + bl.getCurrentPosition()) / 4.0;
+        double xDist = (fl.getCurrentPosition() - fr.getCurrentPosition() + br.getCurrentPosition() - bl.getCurrentPosition()) / 4.0;
+        return new Point(xDist, yDist);
     }
 
     /**

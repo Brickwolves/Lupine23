@@ -16,6 +16,8 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_UP;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB2;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.SQUARE;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TRIANGLE;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIGHT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_X;
@@ -53,6 +55,9 @@ public class IterativeTeleOp extends OpMode {
     boolean last = false;
     boolean toggle = false;
     Controller controller;
+
+
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -165,9 +170,23 @@ public class IterativeTeleOp extends OpMode {
         }
         else */
         if (controller.get(RB1, TOGGLE)){
-            greg.dropper.drop();
+            greg.dropper.drop(0, 0.97);
+        }
+        else if (!controller.get(RB1, TOGGLE)){
+            greg.dropper.drop(0.35, 0.85);
         }
 
+        if (controller.get(TRIANGLE, TOGGLE)){
+            greg.grabber.grab(0.26, 0.875);
+        }
+        else if (!controller.get(TRIANGLE, TOGGLE)){
+            greg.grabber.grab(0.7, 0.35);
+        }
+
+
+        // Sweeper Update method call
+        // Sweeper controlled by SQUARE TOGGLE
+        greg.sweeper.update(controller.get(SQUARE, TOGGLE));
 
 
         controller.setJoystickShift(LEFT, greg.gyro.getAngle());
