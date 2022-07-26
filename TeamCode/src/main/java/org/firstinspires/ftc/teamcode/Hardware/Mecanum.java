@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.isActive;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.telemetry;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -41,10 +45,34 @@ public class Mecanum {
         multTelemetry.addData("Status", "Initialized");
         multTelemetry.update();
     }
-    public Point getPosition(){
-        double yDist = (fr.getCurrentPosition() + fl.getCurrentPosition() + br.getCurrentPosition() + bl.getCurrentPosition()) / 4.0;
-        double xDist = (fl.getCurrentPosition() - fr.getCurrentPosition() + br.getCurrentPosition() - bl.getCurrentPosition()) / 4.0;
-        return new Point(xDist, yDist);
+
+
+    /**
+     * Reset the DcMotors using the setMode() method and the STOP_AND_RESET_ENCODERS method
+     */
+    public void resetMotors(){
+
+        // Example of reseting a motor encoder
+        br.setMode(STOP_AND_RESET_ENCODER);
+        bl.setMode(STOP_AND_RESET_ENCODER);
+        fr.setMode(STOP_AND_RESET_ENCODER);
+        fl.setMode(STOP_AND_RESET_ENCODER);
+
+        fr.setMode(RUN_WITHOUT_ENCODER);
+        fl.setMode(RUN_WITHOUT_ENCODER);
+        br.setMode(RUN_WITHOUT_ENCODER);
+        bl.setMode(RUN_WITHOUT_ENCODER);
+
+        // You need to complete these for each of the fr, fl, br, bl motors
+    }
+
+    /**
+     *
+     * @return average of all motor's getCurrentPosition() but each one is absolute valued
+     */
+    public double getPosition(){
+        double motorPosition = (Math.abs(fr.getCurrentPosition()) + Math.abs(fl.getCurrentPosition()) + Math.abs(br.getCurrentPosition()) + Math.abs(bl.getCurrentPosition()))/4.0;
+        return motorPosition;
     }
 
     /**
@@ -89,7 +117,35 @@ public class Mecanum {
      * Translates the robot autonomously a certain distance known as ticks
      * @param ticks
      */
-    public void strafe(double ticks){
+    public void strafe(double ticks, double acceleration, double deceleration, double maxSpeed){
+        resetMotors();
+        double power = 0.0;
+        double position = 0.0;
+        while(position != ticks && isActive()){
+            position = getPosition();
+            double distanceFromEnd = Math.abs(ticks) - Math.abs(position);
+            double accel = Math.sqrt(Math.abs(position * acceleration)) + 0.1;
+            double decel = Math.sqrt(distanceFromEnd * deceleration) + 0.1;
+            if (position > ticks){
+                power = Math.max(Math.max(accel*-1, maxSpeed*-1), decel*-1);
+            }
+            else {
+                power = Math.min(Math.min(accel, maxSpeed), decel);
+            }
+            if (position == ticks){
+                setAllPower(0.0);
+            }
+            setAllPower(power);
+            multTelemetry.addData("posistion", position);
+            multTelemetry.addData("distance", ticks);
+            multTelemetry.addData("speed", power);
+            multTelemetry.addData("flmotorpos", fl.getCurrentPosition());
+            multTelemetry.addData("frmotorpos", fr.getCurrentPosition());
+            multTelemetry.addData("blmotorpos", bl.getCurrentPosition());
+            multTelemetry.addData("brmotorpos", br.getCurrentPosition());
+            multTelemetry.update();
+        }
+        setAllPower(0.0);
         /*
 
                 Y O U R   C O D E   H E R E
@@ -120,7 +176,8 @@ public class Mecanum {
      * @param acceleration
      * @return the coefficient [0, 1] of our power
      */
-    public static double powerRamp(double position, double distance, double acceleration){
+    public static double powerRamp(double position, double distance, double acceleration, double deceleration, double maxSpeed){
+
         /*
 
                 Y O U R   C O D E   H E R E
