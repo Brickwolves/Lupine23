@@ -15,8 +15,8 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 
-@Autonomous(name="LinearAuto", group="Autonomous Linear Opmode")
-public class LinearAuto extends LinearOpMode
+@Autonomous(name="BlueLinearAuto", group="Autonomous Linear Opmode")
+public class BlueLinearAuto extends LinearOpMode
 {
     Robot greg;
     // Declare OpMode members.
@@ -42,7 +42,17 @@ public class LinearAuto extends LinearOpMode
         waitForStart();
 
         if (opModeIsActive()){
-            greg.drivetrain.strafe(1000, 0.007, 0.01, 1);
+
+            greg.drivetrain.strafe(50, 0.007, 0.01, 1, greg.gyro, true);
+            greg.drivetrain.turn(90, greg.gyro);
+            greg.drivetrain.strafe(-320, 0.007, 0.01, 1, greg.gyro, true);
+            ElapsedTime timer = new ElapsedTime();
+            while(timer.seconds() < 4){
+                greg.duck.spin(-1);
+            }
+            greg.drivetrain.strafe(800, 0.007, 0.01, 1, greg.gyro, false);
+            greg.drivetrain.strafe(-350, 0.007, 0.01, 1, greg.gyro, true);
+
 
             /*
                     Y O U R   C O D E   H E R E

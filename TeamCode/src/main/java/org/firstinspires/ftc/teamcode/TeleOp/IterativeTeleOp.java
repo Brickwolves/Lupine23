@@ -75,7 +75,7 @@ public class IterativeTeleOp extends OpMode {
     public void init() {
         setOpMode(this);
 
-        pid = new PID(0, 0, 0);
+        pid = new PID(0.04, 0, 0.0027);
 
 
 
@@ -155,7 +155,7 @@ public class IterativeTeleOp extends OpMode {
         else{
             greg.duck.spin(0);
         }
-        /*
+
         if(controller.get(DPAD_R, TAP)){
             setPoint += 90;
         }
@@ -168,7 +168,7 @@ public class IterativeTeleOp extends OpMode {
         else if(controller.get(DPAD_DN, TAP)){
             setPoint += 180;
         }
-        else */
+
         if (controller.get(RB1, TOGGLE)){
             greg.dropper.drop(0, 0.97);
         }

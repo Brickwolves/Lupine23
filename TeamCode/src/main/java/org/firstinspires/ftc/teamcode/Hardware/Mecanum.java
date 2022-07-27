@@ -10,7 +10,11 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.telemetry;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.wolfpackmachina.bettersensors.Sensors.Gyro;
 
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.IMU;
+import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
+import org.firstinspires.ftc.teamcode.Utilities.PID;
 import org.opencv.core.Point;
 
 public class Mecanum {
@@ -27,6 +31,7 @@ public class Mecanum {
     DcMotor fr;
     DcMotor bl;
     DcMotor br;
+    PID rotationalPID;
 
     public void initMecanum(){
 
@@ -42,8 +47,12 @@ public class Mecanum {
         br = hardwareMap.get(DcMotor.class, "br");
         br.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        rotationalPID = new PID(0.04, 0 , 0.0023);
+
         multTelemetry.addData("Status", "Initialized");
         multTelemetry.update();
+
+
     }
 
 
@@ -117,11 +126,13 @@ public class Mecanum {
      * Translates the robot autonomously a certain distance known as ticks
      * @param ticks
      */
-    public void strafe(double ticks, double acceleration, double deceleration, double maxSpeed){
+    public void strafe(double ticks, double acceleration, double deceleration, double maxSpeed, IMU currentAngle, boolean fowards){
         resetMotors();
         double power = 0.0;
         double position = 0.0;
-        while(position != ticks && isActive()){
+        resetMotors();
+        double startingAngle = currentAngle.getAngle();
+        while(Math.abs(position) <= Math.abs(ticks) && isActive()){
             position = getPosition();
             double distanceFromEnd = Math.abs(ticks) - Math.abs(position);
             double accel = Math.sqrt(Math.abs(position * acceleration)) + 0.1;
@@ -135,7 +146,12 @@ public class Mecanum {
             if (position == ticks){
                 setAllPower(0.0);
             }
-            setAllPower(power);
+            if(fowards) {
+                setDrivePower(power, 0.0, -rotationalPID.update(startingAngle - currentAngle.getAngle(), true), 1.0);
+            }
+            else{
+                setDrivePower(0.0, power, -rotationalPID.update(startingAngle - currentAngle.getAngle(), true), 1.0);
+            }
             multTelemetry.addData("posistion", position);
             multTelemetry.addData("distance", ticks);
             multTelemetry.addData("speed", power);
@@ -156,9 +172,19 @@ public class Mecanum {
     /**
      * Rotates the robot autonomously a certain number of degrees with a margin of error
      * @param degrees
-     * @param moe
+     * @param currentAngle
      */
-    public void turn(double degrees, double moe){
+    public void turn(double degrees, IMU currentAngle){
+        ElapsedTime timer = new ElapsedTime();
+        double targetAngle = MathUtils.closestAngle(degrees, currentAngle.getAngle());
+
+        while(timer.seconds() < 1.5){
+            setDrivePower(0.0, 0.0, -rotationalPID.update(targetAngle - currentAngle.getAngle(), true), 1.0);
+            multTelemetry.addData("target Angle", targetAngle);
+            multTelemetry.addData("Angle", currentAngle.getAngle());
+            multTelemetry.update();
+        }
+        setAllPower(0.0);
         /*
 
                 Y O U R   C O D E   H E R E
