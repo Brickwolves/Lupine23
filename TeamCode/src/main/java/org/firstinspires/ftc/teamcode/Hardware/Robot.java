@@ -19,9 +19,11 @@ public class Robot {
    public IMU gyro;
    public Dropper dropper;
    public DuckSpinner duck;
+   public Camera camera;
    public Robot(){
       initRobot();
    }
+
 
    public void initRobot() {
 
@@ -35,6 +37,7 @@ public class Robot {
       dropper = new Dropper("rightdropper", "leftdropper");
       drivetrain = new Mecanum();
       duck = new DuckSpinner("duck");
+      camera = new Camera("webcam");
 
       gyro = new IMU( "imu");
 

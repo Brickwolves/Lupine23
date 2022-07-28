@@ -6,6 +6,6 @@ import org.openftc.easyopencv.OpenCvPipeline;
 public class TestPipeline extends OpenCvPipeline {
     @Override
     public Mat processFrame(Mat input) {
-        return null;
+        return input;
     }
 }
