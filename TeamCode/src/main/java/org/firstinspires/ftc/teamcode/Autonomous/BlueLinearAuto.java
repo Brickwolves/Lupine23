@@ -45,13 +45,14 @@ public class BlueLinearAuto extends LinearOpMode
 
             greg.drivetrain.strafe(50, 0.007, 0.01, 1, greg.gyro, true);
             greg.drivetrain.turn(90, greg.gyro);
-            greg.drivetrain.strafe(-320, 0.007, 0.01, 1, greg.gyro, true);
+            greg.drivetrain.strafe(-350, 0.007, 0.01, 1, greg.gyro, true);
             ElapsedTime timer = new ElapsedTime();
             while(timer.seconds() < 4){
                 greg.duck.spin(-1);
             }
             greg.drivetrain.strafe(800, 0.007, 0.01, 1, greg.gyro, false);
             greg.drivetrain.strafe(-350, 0.007, 0.01, 1, greg.gyro, true);
+            greg.drivetrain.strafe(-30, 0.007, 0.01, 1, greg.gyro, false);
 
 
             /*
