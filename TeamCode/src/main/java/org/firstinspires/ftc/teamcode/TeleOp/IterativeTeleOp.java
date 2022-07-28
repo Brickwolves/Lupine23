@@ -88,6 +88,7 @@ public class IterativeTeleOp extends OpMode {
 
 
         multTelemetry.addData("Status", "Initialized");
+        mulTelemetry.addLine(":-)");
         multTelemetry.update();
     }
 
