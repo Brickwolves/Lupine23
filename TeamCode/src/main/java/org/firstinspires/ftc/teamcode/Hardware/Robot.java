@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.IMU;
 
 /**
@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.Hardware.Sensors.IMU;
  */
 public class Robot {
 
-   public static ElapsedTime time = new ElapsedTime();
    public Sweeper sweeper;
    public Mecanum drivetrain;
    public Grabber grabber;

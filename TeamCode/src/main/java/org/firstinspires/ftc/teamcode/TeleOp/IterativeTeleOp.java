@@ -20,10 +20,8 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.SQUAR
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TRIANGLE;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIGHT;
-import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_Y;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
-import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_Y;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
@@ -31,7 +29,6 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
-import org.firstinspires.ftc.teamcode.Utilities.DuckSpeed;
 
 //@Disabled
 @TeleOp(name="Iterative TeleOp", group="Iterative Opmode")
@@ -39,37 +36,22 @@ public class IterativeTeleOp extends OpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor demoMotor;
     private PID pid;
     private double setPoint = 0;
 
     private boolean wasTurning;
 
     // Declare OpMode members.
-    CRServo duck;
-    //    DcMotor flmotor;
-//    DcMotor frmotor;
-//    DcMotor blmotor;
-//    DcMotor brmotor;
-    Robot greg;
-    boolean last = false;
-    boolean toggle = false;
+    Robot robot;
     Controller controller;
+    Controller controller2;
 
 
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
-//    public void toggle(boolean toggle, boolean last, boolean button){ //works by checking the last state of a button
-//        if (button && last != gamepad1.triangle){
-//            toggle = !toggle;
-//            last =true;
-//        }
-//        else if (!gamepad1.triangle){
-//            last = true;
-//        }
-//    }
+
 
     @Override
     public void init() {
@@ -79,16 +61,15 @@ public class IterativeTeleOp extends OpMode {
 
 
 
-        greg = new Robot();
-        //toggle triangleToggle = toggle();
+        robot = new Robot();
         controller = new Controller(gamepad1);
+        controller2 = new Controller(gamepad2);
         /*
                     Y O U R   C O D E   H E R E
                                                     */
 
 
         multTelemetry.addData("Status", "Initialized");
-        mulTelemetry.addLine(":-)");
         multTelemetry.update();
     }
 
@@ -135,26 +116,26 @@ public class IterativeTeleOp extends OpMode {
 
         // double closestAngle = MathUtils.closestAngle()
 
-        double correction = pid.update(greg.gyro.getAngle() - setPoint, true);
+        double correction = pid.update(robot.gyro.getAngle() - setPoint, true);
         double rotation;
         if(!(controller.get(RIGHT, X) == 0)){
             rotation = controller.get(RIGHT, X);
             wasTurning = true;
         }else{
             if(wasTurning){
-                setPoint = greg.gyro.getAngle();
+                setPoint = robot.gyro.getAngle();
                 wasTurning = false;
             }
             rotation = correction;
         }
         if(controller.get(CIRCLE, DOWN) && controller.get(RB2, TOGGLE)){
-            greg.duck.spin(1);
+            robot.duck.spin(1);
         }
         else if(controller.get(CIRCLE, DOWN) && !controller.get(RB2, TOGGLE)){
-            greg.duck.spin(-1);
+            robot.duck.spin(-1);
         }
         else{
-            greg.duck.spin(0);
+            robot.duck.spin(0);
         }
 
         if(controller.get(DPAD_R, TAP)){
@@ -171,26 +152,26 @@ public class IterativeTeleOp extends OpMode {
         }
 
         if (controller.get(RB1, TOGGLE)){
-            greg.dropper.drop(0, 0.97);
+            robot.dropper.drop(0, 0.97);
         }
         else if (!controller.get(RB1, TOGGLE)){
-            greg.dropper.drop(0.35, 0.85);
+            robot.dropper.drop(0.35, 0.85);
         }
 
         if (controller.get(TRIANGLE, TOGGLE)){
-            greg.grabber.grab(0.26, 0.875);
+            robot.grabber.grab(0.26, 0.875);
         }
         else if (!controller.get(TRIANGLE, TOGGLE)){
-            greg.grabber.grab(0.7, 0.35);
+            robot.grabber.grab(0.7, 0.35);
         }
 
 
         // Sweeper Update method call
         // Sweeper controlled by SQUARE TOGGLE
-        greg.sweeper.update(controller.get(SQUARE, TOGGLE));
+        robot.sweeper.update(controller.get(SQUARE, TOGGLE));
 
 
-        controller.setJoystickShift(LEFT, greg.gyro.getAngle());
+        controller.setJoystickShift(LEFT, robot.gyro.getAngle());
 
         double drive = controller.get(LEFT, INVERT_SHIFTED_Y);
         double strafe = controller.get(LEFT, SHIFTED_X);
@@ -201,12 +182,12 @@ public class IterativeTeleOp extends OpMode {
 
 
 
-        greg.drivetrain.setDrivePower(drive, strafe, rotation, power);
+        robot.drivetrain.setDrivePower(drive, strafe, rotation, power);
     /*
          ----------- L O G G I N G -----------
                                             */
         multTelemetry.addData("Status", "TeleOp Running");
-        multTelemetry.addData("Angle", greg.gyro.getAngle());
+        multTelemetry.addData("Angle", robot.gyro.getAngle());
         multTelemetry.addData("SetPoint", setPoint);
         multTelemetry.addData("toggle", controller.get(RB1, TOGGLE));
         multTelemetry.update();

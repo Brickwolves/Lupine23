@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware;
+package org.firstinspires.ftc.teamcode.Hardware.Sensors;
 
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 
