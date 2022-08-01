@@ -88,7 +88,7 @@ public class IterativeTeleOp extends OpMode {
 
 
         multTelemetry.addData("Status", "Initialized");
-        mulTelemetry.addLine(":-)");
+        multTelemetry.addLine(":-)");
         multTelemetry.update();
     }
 
@@ -187,7 +187,7 @@ public class IterativeTeleOp extends OpMode {
 
         // Sweeper Update method call
         // Sweeper controlled by SQUARE TOGGLE
-        greg.sweeper.update(controller.get(SQUARE, TOGGLE));
+        //greg.sweeper.update(controller.get(SQUARE, TOGGLE));
 
 
         controller.setJoystickShift(LEFT, greg.gyro.getAngle());
