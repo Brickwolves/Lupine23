@@ -5,7 +5,6 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -13,17 +12,19 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
+import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 
 
-@Autonomous(name="RedLinearAuto", group="Autonomous Linear Opmode")
-public class RedLinearAuto extends LinearOpMode
+@Autonomous(name="Duck Red", group="Autonomous Linear Opmode")
+public class RedLinearAutoDuck extends LinearOpMode
 {
-    Robot greg;
+    Robot robot;
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 
     public void initialize(){
         setOpMode(this);
+        Side.setRed();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -36,22 +37,22 @@ public class RedLinearAuto extends LinearOpMode
         multTelemetry.addLine("Waiting for start");
         multTelemetry.update();
 
-        greg = new Robot();
+        robot = new Robot();
 
 
         waitForStart();
 
         if (opModeIsActive()){
 
-            greg.drivetrain.strafe(50, 0.007, 0.01, 1, greg.gyro, true);
-            greg.drivetrain.turn(-90, greg.gyro);
-            greg.drivetrain.strafe(-320, 0.007, 0.01, 1, greg.gyro, true);
+            robot.drivetrain.strafe(50, 0.007, 0.01, 1, robot.gyro, true);
+            robot.drivetrain.turn(-90, robot.gyro);
+            robot.drivetrain.strafe(-320, 0.007, 0.01, 1, robot.gyro, true);
             ElapsedTime timer = new ElapsedTime();
             while(timer.seconds() < 4){
-                greg.duck.spin(1);
+                robot.duck.spin();
             }
-            greg.drivetrain.strafe(-800, 0.007, 0.01, 1, greg.gyro, false);
-            greg.drivetrain.strafe(-350, 0.007, 0.01, 1, greg.gyro, true);
+            robot.drivetrain.strafe(-800, 0.007, 0.01, 1, robot.gyro, false);
+            robot.drivetrain.strafe(-350, 0.007, 0.01, 1, robot.gyro, true);
 
 
             /*
