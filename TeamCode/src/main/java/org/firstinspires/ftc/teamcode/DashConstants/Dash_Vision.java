@@ -16,4 +16,14 @@ public class Dash_Vision {
 
     public static boolean DEBUG_MODE = false;
 
+    public static boolean duckLeftBarcode = true; //if the duck is on the left barcode
+
+    public static DuckPosition currentDuckPos = DuckPosition.LEFT_BARCODE;
+
+    public enum DuckPosition{
+        LEFT_BARCODE, RIGHT_BARCODE
+    }
+
+
+
 }

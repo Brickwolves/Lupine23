@@ -25,6 +25,7 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INV
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_Y;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.currentDuckPos;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
@@ -98,12 +99,9 @@ public class IterativeTeleOp extends OpMode {
     @Override
     public void init_loop() {
 
-        /*
-                    Y O U R   C O D E   H E R E
-                                                   */
-
 
         multTelemetry.addData("Status", "InitLoop");
+        multTelemetry.addData("Duck Pos", currentDuckPos);
         multTelemetry.update();
     }
 
@@ -148,13 +146,13 @@ public class IterativeTeleOp extends OpMode {
             rotation = correction;
         }
         if(controller.get(CIRCLE, DOWN) && controller.get(RB2, TOGGLE)){
-            greg.duck.spin(1);
+            greg.duck.spin();
         }
         else if(controller.get(CIRCLE, DOWN) && !controller.get(RB2, TOGGLE)){
-            greg.duck.spin(-1);
+            greg.duck.spin();
         }
         else{
-            greg.duck.spin(0);
+            greg.duck.spin();
         }
 
         if(controller.get(DPAD_R, TAP)){

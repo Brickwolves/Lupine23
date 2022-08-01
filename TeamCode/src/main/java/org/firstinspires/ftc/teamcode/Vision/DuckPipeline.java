@@ -7,6 +7,9 @@ import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.MAX_Y;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.MIN_CB;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.MIN_CR;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.MIN_Y;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.currentDuckPos;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.duckLeftBarcode;
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.IMG_WIDTH;
 import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.IMG_HEIGHT;
 
@@ -22,6 +25,7 @@ import static org.opencv.imgproc.Imgproc.drawContours;
 import static org.opencv.imgproc.Imgproc.findContours;
 import static org.opencv.imgproc.Imgproc.rectangle;
 
+import org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision;
 import org.firstinspires.ftc.teamcode.Utilities.VisionUtils;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -32,14 +36,13 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-public class TestPipeline extends OpenCvPipeline {
+public class DuckPipeline extends OpenCvPipeline {
     private Mat output = new Mat();
     private Mat modified = new Mat();
     private List<MatOfPoint> contours = new ArrayList<>(); //create empty arraylist to store contour points
     private Mat hierarchy = new Mat();
     private Scalar green = new Scalar(0, 255, 0);
+
 
     @Override
     public Mat processFrame(Mat input) {
@@ -67,19 +70,43 @@ public class TestPipeline extends OpenCvPipeline {
              adds that contour to the rectangle arraylist
              then a rectangle is drawn around the contour (in this case the duck)
             */
-
-            rectangle(output, rect, green, 3); //draws a rectangle around the output/contour (the duck)
         }
 
+        if (rects.size() < 1){
+            if (DEBUG_MODE){
+                return modified;
+            }
+            return output;
+        }
+
+        /**
+        looks for the biggest rectangle in the frame (which will be the duck)
+         sorts by area
+         */
         List<Rect> biggestRect = sortRectsByMaxOption(1, VisionUtils.RECT_OPTION.AREA, rects);
+        Rect duckRect = biggestRect.get(0);
+        rectangle(output, duckRect, green, 3); //draws a rectangle around the duck
+
+        /**if statement that checks if the duck is on the left barcode (left half of the frame)
+         * or right barcode (right half of the frame)
+         * sets currentDuckPos equal to whichever is true
+         */
+        if (duckRect.x < (IMG_WIDTH-1) / 2){
+            currentDuckPos = Dash_Vision.DuckPosition.LEFT_BARCODE;
+        } else if (duckRect.x > (IMG_WIDTH-1) / 2){
+            currentDuckPos = Dash_Vision.DuckPosition.RIGHT_BARCODE;
+        }
+
 
         if (DEBUG_MODE){
             return modified;
         }
+
         return output;
 
 
     }
+
 
 
 
