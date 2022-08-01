@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
-import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.IMU;
 
 /**
@@ -12,17 +12,16 @@ import org.firstinspires.ftc.teamcode.Hardware.Sensors.IMU;
  */
 public class Robot {
 
-   public Sweeper sweeper;
+   public static ElapsedTime time = new ElapsedTime();
+   public Intake intake;
    public Mecanum drivetrain;
    public Grabber grabber;
    public IMU gyro;
    public Dropper dropper;
    public DuckSpinner duck;
-   public Camera camera;
    public Robot(){
       initRobot();
    }
-
 
    public void initRobot() {
 
@@ -31,12 +30,11 @@ public class Robot {
        */
 
       //initialized Mecanum
-      sweeper = new Sweeper("sweeper");
+      intake = new Intake();
       grabber = new Grabber("rightgrabber", "leftgrabber");
       dropper = new Dropper("rightdropper", "leftdropper");
       drivetrain = new Mecanum();
       duck = new DuckSpinner("duck");
-      camera = new Camera("webcam");
 
       gyro = new IMU( "imu");
 
