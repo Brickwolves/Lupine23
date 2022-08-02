@@ -5,8 +5,6 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 
-import org.firstinspires.ftc.teamcode.Utilities.DuckSpeed;
-
 public class DuckSpinner {
     String id;
     CRServo duck;
@@ -19,6 +17,8 @@ public class DuckSpinner {
     public void spin(){
         duck.setPower(duckSpeed);
     }
+    public void backspin(){duck.setPower(-duckSpeed);}
+    public void stop(){duck.setPower(0);}
 
 
 

@@ -149,10 +149,10 @@ public class Mecanum {
                 setAllPower(0.0);
             }
             if(fowards) {
-                setDrivePower(power, 0.0, -rotationalPID.update(startingAngle - currentAngle.getAngle(), true), 1.0);
+                setDrivePower(power, 0.0, -rotationalPID.update(startingAngle - currentAngle.getAngle(), false), 1.0);
             }
             else{
-                setDrivePower(0.0, power, -rotationalPID.update(startingAngle - currentAngle.getAngle(), true), 1.0);
+                setDrivePower(0.0, power, -rotationalPID.update(startingAngle - currentAngle.getAngle(), false), 1.0);
             }
             multTelemetry.addData("posistion", position);
             multTelemetry.addData("distance", ticks);

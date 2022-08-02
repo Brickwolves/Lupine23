@@ -25,6 +25,16 @@ public class MathUtils {
         return StrictMath.abs(simpleTargetDelta) <= StrictMath.abs(alternateTargetDelta) ? currentAngle - simpleTargetDelta : currentAngle - alternateTargetDelta;
     }
 
+    public static double closestAngle(double targetAngle, double currentAngle, boolean ticks) {
+        double simpleTargetDelta = floorModDouble(Math.round((384.5 - targetAngle) + currentAngle), 384);
+        double alternateTargetDelta = -1 * (384.5 - simpleTargetDelta);
+        return StrictMath.abs(simpleTargetDelta) <= StrictMath.abs(alternateTargetDelta) ? currentAngle - simpleTargetDelta : currentAngle - alternateTargetDelta;
+    }
+
+    public static double floorModDouble(double dividend, int divisor){
+        return floorMod(Math.round(dividend * 1e6), divisor) / 1e6;
+    }
+
     /**
      * @param x
      * @param a_min

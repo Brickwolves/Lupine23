@@ -17,6 +17,7 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB2;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB2;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.SQUARE;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIGHT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_Y;
@@ -31,6 +32,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWe
 
 import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
+import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 
@@ -43,6 +45,9 @@ public class IterativeTeleOp extends OpMode {
     private PID pid;
     private double setPoint = 0;
     private boolean wasTurning;
+
+    public enum SlidesState{HIGH, MIDDLE, LOW, SHARED, DOWN}
+    public SlidesState slidesState = SlidesState.DOWN;
 
     // Declare OpMode members.
     Robot robot;
@@ -114,68 +119,79 @@ public class IterativeTeleOp extends OpMode {
 
         double power = 0.8 - gamepad1.left_trigger * 0.55;
 
-        // double closestAngle = MathUtils.closestAngle()
 
+        //PID
         double correction = pid.update(robot.gyro.getAngle() - setPoint, true);
         double rotation;
-        if(!(controller.get(RIGHT, X) == 0)){
+        if (!(controller.get(RIGHT, X) == 0)) {
             rotation = controller.get(RIGHT, X);
             wasTurning = true;
-        }else{
-            if(wasTurning){
+        } else {
+            if (wasTurning) {
                 setPoint = robot.gyro.getAngle();
                 wasTurning = false;
             }
             rotation = correction;
         }
 
-        if(controller.get(DPAD_R, TAP)){
-            setPoint = MathUtils.closestAngle(90,robot.gyro.getAngle());
-        }
-        else if(controller.get(DPAD_L, TAP)){
-            setPoint = MathUtils.closestAngle(270,robot.gyro.getAngle());
-        }
-        else if(controller.get(DPAD_UP, TAP)){
-            setPoint = MathUtils.closestAngle(0,robot.gyro.getAngle());
-        }
-        else if(controller.get(DPAD_DN, TAP)){
-            setPoint = MathUtils.closestAngle(180,robot.gyro.getAngle());
+
+        //TURN WRAPPING
+        if (controller.get(DPAD_R, TAP)) {
+            setPoint = MathUtils.closestAngle(270, robot.gyro.getAngle());
+        } else if (controller.get(DPAD_L, TAP)) {
+            setPoint = MathUtils.closestAngle(90, robot.gyro.getAngle());
+        } else if (controller.get(DPAD_UP, TAP)) {
+            setPoint = MathUtils.closestAngle(0, robot.gyro.getAngle());
+        } else if (controller.get(DPAD_DN, TAP)) {
+            setPoint = MathUtils.closestAngle(180, robot.gyro.getAngle());
         }
 
 
+        //DUCKWHEEL CODE
+        if(controller2.get(CIRCLE, TOGGLE)){
+            if(Side.red) {
+                robot.duck.spin();
+            }else{
+                robot.duck.backspin();
+            }
+        }else{
+            robot.duck.stop();
+        }
 
-        if (controller.get(RB2, DOWN)){
+        //INTAKE CODE
+        if (controller.get(RB2, DOWN)) {
             robot.intake.runIntake();
-        }
-        else if (controller.get(LB2, DOWN)){
-            robot.intake.runIntake();
-        }
-        else {
-            robot.intake.stopIntake();
+        } else if (controller.get(RB1, DOWN)) {
+            robot.intake.runIntakeBackwards();
+        } else {
+            robot.intake.stopIntake(false);
         }
 
+        //DEPOSITOR CODE
+        if(controller2.get(DPAD_UP, TAP)){
+            slidesState = SlidesState.HIGH;
+            robot.scorer.time.reset();
+        }
 
+        switch(slidesState){
+            case HIGH:
+                robot.scorer.scoreHigh();
+                break;
+            }
 
-
+        //DRIVING
         controller.setJoystickShift(LEFT, robot.gyro.getAngle());
 
         double drive = controller.get(LEFT, INVERT_SHIFTED_Y);
         double strafe = controller.get(LEFT, SHIFTED_X);
 
 
-
-
-
-
-
         robot.drivetrain.setDrivePower(drive, strafe, rotation, power);
     /*
          ----------- L O G G I N G -----------
                                             */
-        multTelemetry.addData("Status", "TeleOp Running");
-        multTelemetry.addData("Angle", robot.gyro.getAngle());
-        multTelemetry.addData("SetPoint", setPoint);
-        multTelemetry.addData("toggle", controller.get(RB1, TOGGLE));
+        multTelemetry.addData("spool target pos", robot.scorer.spool.getTargetPosition());
+        multTelemetry.addData("spool pos", robot.scorer.spool.getCurrentPosition());
         multTelemetry.update();
     }
 

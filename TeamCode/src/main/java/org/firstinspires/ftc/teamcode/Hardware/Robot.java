@@ -17,6 +17,7 @@ public class Robot {
    public Mecanum drivetrain;
    public IMU gyro;
    public DuckSpinner duck;
+   public Scoring scorer;
    //public Camera camera;
    public Robot(){
       initRobot();
@@ -32,6 +33,7 @@ public class Robot {
       intake = new Intake();
       drivetrain = new Mecanum();
       duck = new DuckSpinner("duck");
+      scorer = new Scoring();
       //camera = new Camera("webcam");
 
       gyro = new IMU( "imu");
