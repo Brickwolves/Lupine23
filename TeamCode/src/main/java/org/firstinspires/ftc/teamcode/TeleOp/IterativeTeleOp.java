@@ -31,6 +31,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWe
 
 import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
+import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 
 //@Disabled
@@ -127,27 +128,18 @@ public class IterativeTeleOp extends OpMode {
             }
             rotation = correction;
         }
-        if(controller.get(CIRCLE, DOWN) && controller.get(RB2, TOGGLE)){
-            robot.duck.spin();
-        }
-        else if(controller.get(CIRCLE, DOWN) && !controller.get(RB2, TOGGLE)){
-            robot.duck.spin();
-        }
-        else{
-            robot.duck.spin();
-        }
 
         if(controller.get(DPAD_R, TAP)){
-            setPoint += 90;
+            setPoint = MathUtils.closestAngle(90,robot.gyro.getAngle());
         }
         else if(controller.get(DPAD_L, TAP)){
-            setPoint += -90;
+            setPoint = MathUtils.closestAngle(270,robot.gyro.getAngle());
         }
         else if(controller.get(DPAD_UP, TAP)){
-            setPoint += 0;
+            setPoint = MathUtils.closestAngle(0,robot.gyro.getAngle());
         }
         else if(controller.get(DPAD_DN, TAP)){
-            setPoint += 180;
+            setPoint = MathUtils.closestAngle(180,robot.gyro.getAngle());
         }
 
 

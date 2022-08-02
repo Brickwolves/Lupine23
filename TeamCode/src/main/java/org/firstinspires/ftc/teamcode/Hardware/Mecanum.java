@@ -6,6 +6,9 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.isActive;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.telemetry;
+import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -47,7 +50,7 @@ public class Mecanum {
         br = hardwareMap.get(DcMotor.class, "br");
         br.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        rotationalPID = new PID(0.04, 0 , 0.0023);
+        rotationalPID = new PID(proportionalWeight, integralWeight , derivativeWeight);
 
         multTelemetry.addData("Status", "Initialized");
         multTelemetry.update();
@@ -80,8 +83,7 @@ public class Mecanum {
      * @return average of all motor's getCurrentPosition() but each one is absolute valued
      */
     public double getPosition(){
-        double motorPosition = (Math.abs(fr.getCurrentPosition()) + Math.abs(fl.getCurrentPosition()) + Math.abs(br.getCurrentPosition()) + Math.abs(bl.getCurrentPosition()))/4.0;
-        return motorPosition;
+        return (Math.abs(fr.getCurrentPosition()) + Math.abs(fl.getCurrentPosition()) + Math.abs(br.getCurrentPosition()) + Math.abs(bl.getCurrentPosition()))/4.0;
     }
 
     /**

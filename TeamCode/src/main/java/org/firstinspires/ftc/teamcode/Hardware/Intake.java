@@ -38,7 +38,7 @@ public class Intake {
     }
 
     public void stopIntake(){
-        intakeMotor.setPower(intakePID.update(MathUtils.closestAngle(0, intakeMotor.getCurrentPosition()) - intakeMotor.getCurrentPosition(), false));
+        intakeMotor.setPower(intakePID.update(MathUtils.closestAngle(0, intakeMotor.getCurrentPosition()) - intakeMotor.getCurrentPosition(), true));
     }
 
 

@@ -33,9 +33,9 @@ public class PID {
         previousError = error;
         previousTime = System.currentTimeMillis();
 
-        double pComponent = error * PIDWeights.proportionalWeight;
-        double iComponent = integralSum * PIDWeights.integralWeight;
-        double dComponent = rateOfChange * PIDWeights.derivativeWeight;
+        double pComponent = error * proportionalWeight;
+        double iComponent = integralSum * integralWeight;
+        double dComponent = rateOfChange * derivativeWeight;
 
         if (isTuning){
             multTelemetry.addData("P", pComponent);
