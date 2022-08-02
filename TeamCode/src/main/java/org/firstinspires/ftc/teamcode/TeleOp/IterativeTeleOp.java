@@ -28,6 +28,8 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.currentDuckPos;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
+import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.IMG_HEIGHT;
+import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.IMG_WIDTH;
 
 import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
@@ -79,18 +81,9 @@ public class IterativeTeleOp extends OpMode {
         pid = new PID(0.04, 0, 0.0027);
 
 
-
         greg = new Robot();
         //toggle triangleToggle = toggle();
         controller = new Controller(gamepad1);
-        /*
-                    Y O U R   C O D E   H E R E
-                                                    */
-
-
-        multTelemetry.addData("Status", "Initialized");
-        multTelemetry.addLine(":-)");
-        multTelemetry.update();
     }
 
     /*
@@ -99,10 +92,18 @@ public class IterativeTeleOp extends OpMode {
     @Override
     public void init_loop() {
 
-
+        /*
         multTelemetry.addData("Status", "InitLoop");
         multTelemetry.addData("Duck Pos", currentDuckPos);
+        multTelemetry.addData("IMG_WIDTH", IMG_WIDTH);
+        multTelemetry.addData("IMG_HEIGHT", IMG_HEIGHT);
+        multTelemetry.addData("distance to duck", greg.camera.pipeline.distanceToDuck());
+        multTelemetry.addData("degree error", greg.camera.pipeline.degreeError2Duck());
+        multTelemetry.addData("angle of depression", greg.camera.pipeline.angleOfDep);
+        multTelemetry.addData("target angle", greg.camera.pipeline.degreeError2Duck()+greg.gyro.getAngle());
+        multTelemetry.addData("current angle", greg.gyro.getAngle());
         multTelemetry.update();
+         */
     }
 
     /*
@@ -145,15 +146,6 @@ public class IterativeTeleOp extends OpMode {
             }
             rotation = correction;
         }
-        if(controller.get(CIRCLE, DOWN) && controller.get(RB2, TOGGLE)){
-            greg.duck.spin();
-        }
-        else if(controller.get(CIRCLE, DOWN) && !controller.get(RB2, TOGGLE)){
-            greg.duck.spin();
-        }
-        else{
-            greg.duck.spin();
-        }
 
         if(controller.get(DPAD_R, TAP)){
             setPoint += 90;
@@ -168,19 +160,6 @@ public class IterativeTeleOp extends OpMode {
             setPoint += 180;
         }
 
-        if (controller.get(RB1, TOGGLE)){
-            greg.dropper.drop(0, 0.97);
-        }
-        else if (!controller.get(RB1, TOGGLE)){
-            greg.dropper.drop(0.35, 0.85);
-        }
-
-        if (controller.get(TRIANGLE, TOGGLE)){
-            greg.grabber.grab(0.26, 0.875);
-        }
-        else if (!controller.get(TRIANGLE, TOGGLE)){
-            greg.grabber.grab(0.7, 0.35);
-        }
 
 
         // Sweeper Update method call

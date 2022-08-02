@@ -27,11 +27,8 @@ public class Mecanum {
     }
 
     private ElapsedTime runtime = new ElapsedTime();
-    DcMotor fl;
-    DcMotor fr;
-    DcMotor bl;
-    DcMotor br;
-    PID rotationalPID;
+    private DcMotor fl, fr, bl, br;
+    public PID rotationalPID;
 
     public void initMecanum(){
 

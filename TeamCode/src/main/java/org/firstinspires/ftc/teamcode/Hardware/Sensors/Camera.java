@@ -13,7 +13,7 @@ public class Camera {
 
     private OpenCvCamera webcam;
     private String id;
-    private OpenCvPipeline pipeline = new DuckPipeline();
+    public DuckPipeline pipeline = new DuckPipeline();
 
 
     public Camera(String id){
