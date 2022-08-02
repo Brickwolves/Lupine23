@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIGHT;
+import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.intakeD;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.intakeI;
@@ -9,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 
 public class Intake {
@@ -32,6 +35,10 @@ public class Intake {
 
     public void runIntakeBackwards(){
         intakeMotor.setPower(-1.0);
+    }
+
+    public void stopIntake(){
+        intakeMotor.setPower(intakePID.update(MathUtils.closestAngle(0, intakeMotor.getCurrentPosition()) - intakeMotor.getCurrentPosition(), false));
     }
 
 
