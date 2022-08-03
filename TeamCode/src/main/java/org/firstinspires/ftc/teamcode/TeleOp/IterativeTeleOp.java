@@ -22,8 +22,6 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHI
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.currentDuckPos;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
-import static org.firstinspires.ftc.teamcode.Utilities.Freight.FreightType.NONE;
-import static org.firstinspires.ftc.teamcode.Utilities.Freight.freight;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
@@ -46,7 +44,8 @@ public class IterativeTeleOp extends OpMode {
     private PID pid;
     private double setPoint = 0;
     private boolean wasTurning;
-    private boolean PID_ON = false;
+    private boolean pid_on = false;
+    private boolean pid_on_last_cycle = false;
 
     public enum SlidesState {HIGH, MIDDLE, LOW, SHARED, DOWN}
 
@@ -122,47 +121,39 @@ public class IterativeTeleOp extends OpMode {
         double power;
 
         //PID and Kinetic Turning
-        double correction = 0.0;
         double rotation = controller.get(RIGHT, X);
 
-        // if we manually turn
-        if (!(rotation == 0)) {
-            setPoint = robot.gyro.getAngle();
-            wasTurning = true;
-            PID_ON = false;
-
-        // if we were just manually turning AND robot still rotating
-        } else if (robot.gyro.rateOfChange() > rateOfChange && wasTurning) {
-            setPoint = robot.gyro.getAngle();
-            PID_ON = false;
-
-        // not manually turning AND robot has stopped rotating
-        } else {
-            wasTurning = false;
-            PID_ON = true;
-        }
+        // Turn off PID if we manually turn
+        // Turn on PID if we're not manually turning and the robot's stops rotating
+        double currentRateOfChange = robot.gyro.rateOfChange();
+        if (!(rotation == 0)) pid_on = false;
+        else if (currentRateOfChange <= rateOfChange) pid_on = true;
 
 
 
         //TURN WRAPPING
         if (controller.get(DPAD_R, TAP)) {
             setPoint = MathUtils.closestAngle(270, robot.gyro.getAngle());
-            PID_ON = true;
+            pid_on = true;
         } else if (controller.get(DPAD_L, TAP)) {
             setPoint = MathUtils.closestAngle(90, robot.gyro.getAngle());
-            PID_ON = true;
+            pid_on = true;
         } else if (controller.get(DPAD_UP, TAP)) {
             setPoint = MathUtils.closestAngle(0, robot.gyro.getAngle());
-            PID_ON = true;
+            pid_on = true;
         } else if (controller.get(DPAD_DN, TAP)) {
             setPoint = MathUtils.closestAngle(180, robot.gyro.getAngle());
-            PID_ON = true;
+            pid_on = true;
         }
 
-        if (PID_ON){
 
-            rotation = pid.update(robot.gyro.getAngle() - setPoint, true);
-        }
+        // Lock the heading if we JUST turned PID on
+        // Correct our heading if the PID has and is still on
+        if (pid_on && !pid_on_last_cycle) setPoint = robot.gyro.getAngle();
+        else if (pid_on) rotation = pid.update(robot.gyro.getAngle() - setPoint, true);
+
+        // Update whether the PID was on or not
+        pid_on_last_cycle = pid_on;
 
 
 
