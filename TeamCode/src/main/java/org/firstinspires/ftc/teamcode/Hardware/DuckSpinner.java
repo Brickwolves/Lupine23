@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
-import static org.firstinspires.ftc.teamcode.DashConstants.PostitionsAndSpeeds.duckSpeed;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.duckSpeed;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 
 import com.qualcomm.robotcore.hardware.CRServo;

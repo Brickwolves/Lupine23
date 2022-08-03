@@ -30,7 +30,7 @@ public class Intake {
     }
 
     public void runIntake(){
-        intakeMotor.setPower(1.0);
+        intakeMotor.setPower(0.8);
     }
 
     public void runIntakeBackwards(){
