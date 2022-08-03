@@ -15,6 +15,9 @@ public class IMU {
     private double startAngle;
     private double offsetAngle;
 
+    private long previousTime = System.currentTimeMillis();
+    double previousChange = 0;
+
     public IMU(String deviceName) {
 
         imu = OpModeUtils.hardwareMap.get(BNO055IMU.class, deviceName);
@@ -28,6 +31,15 @@ public class IMU {
 
     }
 
+    public double rateOfChange(){
+        double change = getAngle();
+        double deltaTime = (System.currentTimeMillis() - previousTime) / 1000.0;
+        double deltaChange = change - previousChange;
+        double rateOfChange = deltaChange/deltaTime;
+        previousTime = System.currentTimeMillis();
+        previousChange = change;
+        return Math.abs(rateOfChange);
+    }
 
     public double getUnwrappedAngle(){
         // Get the current angle

@@ -21,6 +21,7 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INV
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.currentDuckPos;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
 import static org.firstinspires.ftc.teamcode.Utilities.Freight.FreightType.NONE;
 import static org.firstinspires.ftc.teamcode.Utilities.Freight.freight;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
@@ -41,13 +42,14 @@ import org.firstinspires.ftc.teamcode.Utilities.PID;
 public class IterativeTeleOp extends OpMode {
 
     // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
+    private final ElapsedTime runtime = new ElapsedTime();
     private PID pid;
     private double setPoint = 0;
     private boolean wasTurning;
-    private boolean wasLoaded;
+    private boolean PID_ON = false;
 
-    public enum SlidesState{HIGH, MIDDLE, LOW, SHARED, DOWN}
+    public enum SlidesState {HIGH, MIDDLE, LOW, SHARED, DOWN}
+
     public SlidesState slidesState = SlidesState.DOWN;
 
     // Declare OpMode members.
@@ -66,7 +68,6 @@ public class IterativeTeleOp extends OpMode {
         setOpMode(this);
 
         pid = new PID(proportionalWeight, integralWeight, derivativeWeight);
-
 
 
         robot = new Robot();
@@ -118,34 +119,52 @@ public class IterativeTeleOp extends OpMode {
     public void loop() {
         Controller.update();
 
-        double power = 0.8 - gamepad1.left_trigger * 0.55;
+        double power;
 
+        //PID and Kinetic Turning
+        double correction = 0.0;
+        double rotation = controller.get(RIGHT, X);
 
-        //PID
-        double correction = pid.update(robot.gyro.getAngle() - setPoint, true);
-        double rotation;
-        if (!(controller.get(RIGHT, X) == 0)) {
-            rotation = controller.get(RIGHT, X);
+        // if we manually turn
+        if (!(rotation == 0)) {
+            setPoint = robot.gyro.getAngle();
             wasTurning = true;
+            PID_ON = false;
+
+        // if we were just manually turning AND robot still rotating
+        } else if (robot.gyro.rateOfChange() > rateOfChange && wasTurning) {
+            setPoint = robot.gyro.getAngle();
+            PID_ON = false;
+
+        // not manually turning AND robot has stopped rotating
         } else {
-            if (wasTurning) {
-                setPoint = robot.gyro.getAngle();
-                wasTurning = false;
-            }
-            rotation = correction;
+            wasTurning = false;
+            PID_ON = true;
         }
+
 
 
         //TURN WRAPPING
         if (controller.get(DPAD_R, TAP)) {
             setPoint = MathUtils.closestAngle(270, robot.gyro.getAngle());
+            PID_ON = true;
         } else if (controller.get(DPAD_L, TAP)) {
             setPoint = MathUtils.closestAngle(90, robot.gyro.getAngle());
+            PID_ON = true;
         } else if (controller.get(DPAD_UP, TAP)) {
             setPoint = MathUtils.closestAngle(0, robot.gyro.getAngle());
+            PID_ON = true;
         } else if (controller.get(DPAD_DN, TAP)) {
             setPoint = MathUtils.closestAngle(180, robot.gyro.getAngle());
+            PID_ON = true;
         }
+
+        if (PID_ON){
+
+            rotation = pid.update(robot.gyro.getAngle() - setPoint, true);
+        }
+
+
 
 
         //DUCKWHEEL CODE
@@ -240,8 +259,8 @@ public class IterativeTeleOp extends OpMode {
     /*
          ----------- L O G G I N G -----------
                                             */
-        multTelemetry.addData("spool target pos", robot.scorer.spool.getTargetPosition());
-        multTelemetry.addData("spool pos", robot.scorer.spool.getCurrentPosition());
+        multTelemetry.addData("Intake Speed", robot.intake.getTPS());
+        multTelemetry.addData("Rate Of Change", robot.gyro.rateOfChange());
         multTelemetry.update();
     }
 

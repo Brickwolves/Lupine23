@@ -11,6 +11,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.intakeP;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.Color_Sensor;
 import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
@@ -20,6 +21,8 @@ public class Intake {
     String id;
     PID intakePID;
     DcMotor intakeMotor;
+    private long previousTime = System.currentTimeMillis();
+    double previousChange = 0;
 
 
     public Intake(){
@@ -46,6 +49,16 @@ public class Intake {
             intakeMotor.setPower(0);
         }
 
+    }
+
+    public double getTPS(){
+        double change = intakeMotor.getCurrentPosition();
+        double deltaTime = (System.currentTimeMillis() - previousTime) / 1000.0;
+        double deltaChange = change - previousChange;
+        double rateOfChange = deltaChange/deltaTime;
+        previousTime = System.currentTimeMillis();
+        previousChange = change;
+        return rateOfChange;
     }
 
 

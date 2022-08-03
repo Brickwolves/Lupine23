@@ -123,4 +123,8 @@ public class Controller {
     public void rumble(int seconds){
         this.src.rumble(seconds);
     }
+
+    public boolean dpadPress(){
+        return this.buttons.DPADPress();
+    }
 }

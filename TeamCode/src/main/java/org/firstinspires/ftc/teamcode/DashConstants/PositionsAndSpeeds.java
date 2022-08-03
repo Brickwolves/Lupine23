@@ -18,4 +18,6 @@ public class PositionsAndSpeeds {
     public static int whiteRed = 100;
     public static int whiteGreen = 100;
     public static int whiteBlue = 100;
+
+    public static double rateOfChange = 300;
 }
