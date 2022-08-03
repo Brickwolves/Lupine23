@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.CAMERA_OFFSET;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
@@ -44,19 +43,10 @@ public class VisionTest extends LinearOpMode
 
         waitForStart();
 
-        while (opModeIsActive()){
+        if (opModeIsActive()){
 
-            double distance2Duck = robot.camera.pipeline.distanceToDuck();
-            double setPoint = CAMERA_OFFSET + robot.camera.pipeline.degreeError2Duck() + robot.gyro.getAngle(); // calculates distance between robot's current angle and the angle it needs to go to
-            double correction = robot.drivetrain.rotationalPID.update(robot.gyro.getAngle() - setPoint, true); //turns robot so that degreeError2Duck() = 0 (robot is exactly on target)
-
-            robot.drivetrain.setDrivePower(0, 0, correction, 0.8);
-
-
-            multTelemetry.addData("Distance2Duck", distance2Duck);
-            multTelemetry.addData("SetPoint", setPoint);
-            multTelemetry.addData("Angle", robot.gyro.getAngle());
-            multTelemetry.update();
+            robot.orientToDuck();
+            robot.intakeDuck();
 
         }
    }

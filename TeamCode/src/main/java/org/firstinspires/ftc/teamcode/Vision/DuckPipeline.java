@@ -55,7 +55,7 @@ public class DuckPipeline extends OpenCvPipeline {
     public double pixMid2Mid;
     public double disMid2Mid;
 
-    public boolean isDuckFound;
+    public static boolean isDuckFound;
 
 
     @Override
@@ -93,6 +93,8 @@ public class DuckPipeline extends OpenCvPipeline {
             }
             return output;
         }
+
+        isDuckFound = true;
 
         /**
         looks for the biggest rectangle in the frame (which will be the duck)

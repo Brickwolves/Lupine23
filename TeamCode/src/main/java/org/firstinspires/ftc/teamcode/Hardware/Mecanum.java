@@ -123,7 +123,7 @@ public class Mecanum {
      * Translates the robot autonomously a certain distance known as ticks
      * @param ticks
      */
-    public void strafe(double ticks, double acceleration, double deceleration, double maxSpeed, IMU currentAngle, boolean fowards){
+    public void strafe(double ticks, double acceleration, double deceleration, double maxSpeed, IMU currentAngle, boolean forwards){
         resetMotors();
         double power = 0.0;
         double position = 0.0;
@@ -143,7 +143,7 @@ public class Mecanum {
             if (position == ticks){
                 setAllPower(0.0);
             }
-            if(fowards) {
+            if(forwards) {
                 setDrivePower(power, 0.0, -rotationalPID.update(startingAngle - currentAngle.getAngle(), true), 1.0);
             }
             else{
@@ -177,6 +177,25 @@ public class Mecanum {
 
         while(timer.seconds() < 1.5){
             setDrivePower(0.0, 0.0, -rotationalPID.update(targetAngle - currentAngle.getAngle(), true), 1.0);
+            multTelemetry.addData("target Angle", targetAngle);
+            multTelemetry.addData("Angle", currentAngle.getAngle());
+            multTelemetry.update();
+        }
+        setAllPower(0.0);
+        /*
+
+                Y O U R   C O D E   H E R E
+
+         */
+
+    }
+
+    public void turn(double degrees, IMU currentAngle, double power){
+        ElapsedTime timer = new ElapsedTime();
+        double targetAngle = MathUtils.closestAngle(degrees, currentAngle.getAngle());
+
+        while(timer.seconds() < 1.5){
+            setDrivePower(0.0, 0.0, -rotationalPID.update(targetAngle - currentAngle.getAngle(), true), power);
             multTelemetry.addData("target Angle", targetAngle);
             multTelemetry.addData("Angle", currentAngle.getAngle());
             multTelemetry.update();

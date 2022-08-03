@@ -18,6 +18,8 @@ public class Dash_Vision {
 
     public static double CAMERA_OFFSET = 10.0;
 
+    public static double DEGREE_RANGE = 100;
+
 
     public static DuckPosition currentDuckPos = DuckPosition.LEFT_BARCODE;
 
