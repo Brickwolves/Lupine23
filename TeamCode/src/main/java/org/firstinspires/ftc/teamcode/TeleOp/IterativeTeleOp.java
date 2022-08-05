@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.DOWN;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.TAP;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.TOGGLE;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.CIRCLE;
@@ -15,6 +16,7 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB2;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.SQUARE;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TRIANGLE;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIGHT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_Y;
@@ -224,6 +226,10 @@ public class IterativeTeleOp extends OpMode {
                 break;
             }
 
+
+        if (controller.get(TRIANGLE, DOWN)){
+            robot.odoWheels.raiseWheels();
+        }
         //RUMBLE
 //        if(slidesState == SlidesState.DOWN) {
 //            if(!wasLoaded && freight != NONE){

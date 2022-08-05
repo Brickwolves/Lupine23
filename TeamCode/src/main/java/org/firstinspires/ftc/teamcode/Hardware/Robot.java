@@ -15,6 +15,7 @@ public class Robot {
 
    public Intake intake;
    public Mecanum drivetrain;
+   public OdoWheels odoWheels;
    public IMU gyro;
    public DuckSpinner duck;
    public Scoring scorer;
@@ -30,6 +31,7 @@ public class Robot {
        */
 
       //initialized Mecanum
+      odoWheels = new OdoWheels();
       intake = new Intake();
       drivetrain = new Mecanum();
       duck = new DuckSpinner("duck");
