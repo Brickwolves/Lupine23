@@ -1,15 +1,16 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.CAMERA_OFFSET;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.FRONT_CAMERA_OFFSET;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.BACK_CAMERA_OFFSET;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.DEGREE_RANGE;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.FRONT_CAMERA_OFFSET;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.isActive;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
-import static org.firstinspires.ftc.teamcode.Vision.DuckPipeline.isDuckFound;
+import static org.firstinspires.ftc.teamcode.Vision.DuckPipelineLR.isDuckFound;
 
-import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.Cameras;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.IMU;
 
 /**
@@ -21,28 +22,18 @@ public class Robot {
 
    public Intake intake;
    public Mecanum drivetrain;
-   public Grabber grabber;
    public IMU gyro;
-   public Dropper dropper;
    public DuckSpinner duck;
-   public Camera camera;
    public Robot(){
       initRobot();
    }
+   public Cameras cameras;
 
    public void initRobot() {
-
-      /*
-            I N I T   M O T O R S
-       */
-
-      //initialized Mecanum
-      //intake = new Intake();
-      //grabber = new Grabber("rightgrabber", "leftgrabber");
-      //dropper = new Dropper("rightdropper", "leftdropper");
       drivetrain = new Mecanum();
       duck = new DuckSpinner("duck");
-      camera = new Camera("webcam");
+      cameras = new Cameras(); //to access front and back: cameras.fcam and cameras.bcam
+
 
       gyro = new IMU( "imu");
 
@@ -57,10 +48,10 @@ public class Robot {
     * @return
     */
    //find duck, turn to duck, lock onto duck
-   public void orientToDuck(){
+   public void orientToDuck(){ //NOTE: this method is only for front cam
       ElapsedTime timer = new ElapsedTime();
       timer.reset(); //timer is 0
-      double theta = gyro.getAngle();
+      double theta = gyro.getAngle(); //robot's current angle BEFORE the loop begins
       boolean reachedAng1 = false;
       boolean reachedAng2 = false;
       double angle1 = theta + DEGREE_RANGE; // can modify thru dashboard
@@ -72,7 +63,7 @@ public class Robot {
          if (isDuckFound){ //if the camera sees the duck
             timeout = 3;
             //setPoint = target angle
-            double setPoint = CAMERA_OFFSET + camera.pipeline.degreeError2Duck() + gyro.getAngle();
+            double setPoint = FRONT_CAMERA_OFFSET + cameras.fcam.front_pipeline.degreeError2Duck() + gyro.getAngle();
             //calculates the difference between robot's current angle and target angle
             //finds how much farther robot has to turn
             double correction = drivetrain.rotationalPID.update(gyro.getAngle() - setPoint, true);
@@ -84,7 +75,7 @@ public class Robot {
             multTelemetry.addData("isDuckFound", isDuckFound);
 
          } else { //if the camera does not see the duck
-            double currentAngle = gyro.getAngle();
+            double currentAngle = gyro.getAngle(); //robot's current angle (constantly resetting after each setDrivePower is supplied)
             if (!reachedAng1){ // if the robot has not reached angle 1 yet
                drivetrain.setDrivePower(0, 0, 0.3, -1);
                timeout = 5;
@@ -111,12 +102,16 @@ public class Robot {
       drivetrain.setDrivePower(0, 0, 0, 0); //stop moving, we didn't find the duckie :(
    }
 
+   //essentially an extension of orientToDuck
    //a method that prompts the robot to drive to and intake the duck
-   //NOTE: avery's bot doesn't have an intake so as of now it just drives to the duck
+   //this method is also just for fcam
    public void intakeDuck(){
-      double distance2Duck = camera.pipeline.distanceToDuck();
-      if (isDuckFound){
-         drivetrain.strafe(distance2Duck * 41.5, 0.1, 0.1, 0.5, gyro, true); //drives to duck
+      double distance2Duck2 = cameras.fcam.front_pipeline.getDistanceToDuck2();
+      ElapsedTime timer = new ElapsedTime();
+      timer.reset();
+      while (isDuckFound && timer.seconds() < 3){
+         intake.runIntake();
+         drivetrain.strafe(distance2Duck2 * 41.5, 0.1, 0.1, 0.5, gyro, true); //drives to duck
       }
    }
 

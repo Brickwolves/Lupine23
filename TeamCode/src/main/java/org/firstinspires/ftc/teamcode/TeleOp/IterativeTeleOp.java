@@ -28,8 +28,6 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.currentDuckPos;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
-import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.IMG_HEIGHT;
-import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.IMG_WIDTH;
 
 import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
