@@ -1,14 +1,11 @@
 package org.firstinspires.ftc.teamcode.Hardware.Sensors;
 
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.momentOfInertia;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.OpModeUtils;
 
 public class IMU {
@@ -51,10 +48,6 @@ public class IMU {
 
         return currentAngle;
 
-    }
-
-    public double getAngularKineticEnergy(){
-        return MathUtils.pow(rateOfChange(), 2) * .5 * momentOfInertia;
     }
 
     /**

@@ -98,9 +98,4 @@ public class MathUtils {
     public static double convertTicks2Inches(double inches){
         return (0.0207 * inches) + 4.38; // Calculated using desmos
     }
-
-    public static double pow(double value, double exponent){
-        if(value == 0) return 0;
-        else return Math.pow(Math.abs(value), exponent) * (value/ Math.abs(value));
-    }
 }

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.Utilities.Loggers;
 
 public class Side {
-    public static boolean red = true;
+    public static boolean red = false;
 
     public static void setBlue(){
         red = false;

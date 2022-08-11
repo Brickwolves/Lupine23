@@ -50,6 +50,7 @@ public class Robot {
       multTelemetry.update();
    }
 
+<<<<<<< HEAD
    //find duck, turn to duck, lock onto duck
    public void orientToDuck(){ //NOTE: this method is only for front cam
       ElapsedTime timer = new ElapsedTime();
@@ -124,5 +125,7 @@ public class Robot {
 
    }
 
+=======
+>>>>>>> parent of 5047ddb (Everything works, PID not tuned, no autos)
 
 }

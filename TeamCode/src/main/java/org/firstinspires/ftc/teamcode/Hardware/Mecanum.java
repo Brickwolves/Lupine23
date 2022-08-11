@@ -171,8 +171,6 @@ public class Mecanum {
          */
     }
 
-
-
     /**
      * Rotates the robot autonomously a certain number of degrees with a margin of error
      * @param degrees
@@ -215,6 +213,4 @@ public class Mecanum {
          */
         return 0;
     }
-
-
 }

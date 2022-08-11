@@ -11,12 +11,14 @@ import org.firstinspires.ftc.teamcode.Utilities.OpModeUtils;
 
 public class Color_Sensor {
     public ColorSensor colorSensor;
+//    public com.wolfpackmachina.bettersensors.Sensors.ColorSensor colorSensorV3;
     public int redCacheValue, blueCacheValue, greenCacheValue = 0;
 
     public void init(String mapName) {
         HardwareMapProvider.setMap(hardwareMap);
 
         colorSensor = hardwareMap.get(ColorSensor.class, mapName);
+//        colorSensorV3 = new com.wolfpackmachina.bettersensors.Sensors.ColorSensor(mapName, 0);
     }
 
     /**
