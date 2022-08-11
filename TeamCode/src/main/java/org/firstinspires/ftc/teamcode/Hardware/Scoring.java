@@ -8,7 +8,6 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.li
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.Color_Sensor;
-import org.firstinspires.ftc.teamcode.Utilities.Freight;
 
 public class Scoring {
     public DcMotor spool;

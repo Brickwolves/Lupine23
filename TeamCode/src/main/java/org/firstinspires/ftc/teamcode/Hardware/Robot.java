@@ -30,8 +30,7 @@ public class Robot {
             I N I T   M O T O R S
        */
 
-      //initialized Mecanum
-      odoWheels = new OdoWheels();
+      //initialized Mecanu
       intake = new Intake();
       drivetrain = new Mecanum();
       duck = new DuckSpinner("duck");
