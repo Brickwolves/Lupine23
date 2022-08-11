@@ -36,6 +36,10 @@ public class Dash_Vision {
         LEFT_BARCODE, RIGHT_BARCODE
     }
 
+    public enum CamBeingUsed{
+        BCAM, FCAM
+    }
+
 
 
 }

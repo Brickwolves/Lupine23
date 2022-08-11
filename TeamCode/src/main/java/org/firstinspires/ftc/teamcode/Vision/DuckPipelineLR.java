@@ -56,6 +56,7 @@ public class DuckPipelineLR extends OpenCvPipeline {
     public static boolean isDuckFound;
 
 
+
     @Override
     public Mat processFrame(Mat input) {
         BACK_IMG_HEIGHT = input.rows(); //input image height
