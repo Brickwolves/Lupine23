@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import static org.firstinspires.ftc.teamcode.DashConstants.DuckPos.left;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
@@ -44,10 +45,11 @@ public class RedLinearAutoWarehouse extends LinearOpMode
 
         if (opModeIsActive()){
 
+            if(left){
+               // robot.drivetrain.strafe();
+            }else{
 
-            /*
-                    Y O U R   C O D E   H E R E
-                                                   */
+            }
 
         }
     }

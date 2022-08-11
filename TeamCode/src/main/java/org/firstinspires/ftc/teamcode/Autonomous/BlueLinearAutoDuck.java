@@ -46,17 +46,6 @@ public class BlueLinearAutoDuck extends LinearOpMode
 
         if (opModeIsActive()){
 
-            robot.drivetrain.strafe(50, 0.007, 0.01, 1, robot.gyro, true);
-            robot.drivetrain.turn(90, robot.gyro);
-            robot.drivetrain.strafe(-350, 0.007, 0.01, 1, robot.gyro, true);
-            ElapsedTime timer = new ElapsedTime();
-            while(timer.seconds() < 4){
-                robot.duck.spin();
-            }
-            robot.drivetrain.strafe(800, 0.007, 0.01, 1, robot.gyro, false);
-            robot.drivetrain.strafe(-350, 0.007, 0.01, 1, robot.gyro, true);
-            robot.drivetrain.strafe(-30, 0.007, 0.01, 1, robot.gyro, false);
-
 
             /*
                     Y O U R   C O D E   H E R E

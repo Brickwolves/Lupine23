@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.Hardware;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.angleMode.DEGREES;
+import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.cos;
+import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.sin;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.isActive;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
@@ -29,7 +32,7 @@ public class Mecanum {
         initMecanum();
     }
 
-    private ElapsedTime runtime = new ElapsedTime();
+    private ElapsedTime timeOut = new ElapsedTime();
     DcMotor fl;
     DcMotor fr;
     DcMotor bl;
@@ -86,6 +89,13 @@ public class Mecanum {
         return (Math.abs(fr.getCurrentPosition()) + Math.abs(fl.getCurrentPosition()) + Math.abs(br.getCurrentPosition()) + Math.abs(bl.getCurrentPosition()))/4.0;
     }
 
+    public Point getPosition(boolean point){
+        double yDist = (fr.getCurrentPosition() + fl.getCurrentPosition() + br.getCurrentPosition() + bl.getCurrentPosition()) / 4.0;
+        double xDist = (fl.getCurrentPosition() - fr.getCurrentPosition() + br.getCurrentPosition() - bl.getCurrentPosition()) / 4.0;
+        return new Point(xDist, yDist);
+    }
+
+
     /**
      * Sets the same power to all four motors
      * @param power
@@ -128,47 +138,57 @@ public class Mecanum {
      * Translates the robot autonomously a certain distance known as ticks
      * @param ticks
      */
-    public void strafe(double ticks, double acceleration, double deceleration, double maxSpeed, IMU currentAngle, boolean fowards){
+    public void strafe(double power, double ticks, double targetAngle, double strafeAngle, double marginOfError, IMU gyro){
+
+        // Reset our encoders to 0
         resetMotors();
-        double power = 0.0;
-        double position = 0.0;
-        resetMotors();
-        double startingAngle = currentAngle.getAngle();
-        while(Math.abs(position) <= Math.abs(ticks) && isActive()){
-            position = getPosition();
-            double distanceFromEnd = Math.abs(ticks) - Math.abs(position);
-            double accel = Math.sqrt(Math.abs(position * acceleration)) + 0.1;
-            double decel = Math.sqrt(distanceFromEnd * deceleration) + 0.1;
-            if (position > ticks){
-                power = Math.max(Math.max(accel*-1, maxSpeed*-1), decel*-1);
+        timeOut.reset();
+
+
+
+        strafeAngle = strafeAngle - 90;
+        targetAngle = targetAngle - 180;
+
+        targetAngle = MathUtils.closestAngle(targetAngle, gyro.getAngle());
+
+        // Calculate our x and y powers
+        double xPower = cos(strafeAngle, DEGREES);
+        double yPower = sin(strafeAngle, DEGREES);
+
+        // Calculate the distances we need to travel
+        double xDist = xPower * ticks;
+        double yDist = yPower * ticks;
+
+
+
+        // Initialize our current position variables
+        Point curPos;
+        double curHDist = 0;
+
+        while ((curHDist < ticks || gyro.absAngularDist(targetAngle) > marginOfError) && timeOut.seconds() < ticks/500){
+            curPos = getPosition(true);
+
+
+            curHDist = Math.hypot(curPos.x, curPos.y);
+            Point shiftedPowers = MathUtils.shift(new Point(xPower, yPower), -gyro.getAngle());
+
+
+            if(curHDist < ticks){
+
+                setDrivePower(power, shiftedPowers.x, rotationalPID.update(targetAngle - gyro.getAngle(), false), shiftedPowers.y);
+            }else{
+                setDrivePower(power, 0, rotationalPID.update(targetAngle - gyro.getAngle(),false), 0);
             }
-            else {
-                power = Math.min(Math.min(accel, maxSpeed), decel);
-            }
-            if (position == ticks){
-                setAllPower(0.0);
-            }
-            if(fowards) {
-                setDrivePower(power, 0.0, -rotationalPID.update(startingAngle - currentAngle.getAngle(), false), 1.0);
-            }
-            else{
-                setDrivePower(0.0, power, -rotationalPID.update(startingAngle - currentAngle.getAngle(), false), 1.0);
-            }
-            multTelemetry.addData("posistion", position);
-            multTelemetry.addData("distance", ticks);
-            multTelemetry.addData("speed", power);
-            multTelemetry.addData("flmotorpos", fl.getCurrentPosition());
-            multTelemetry.addData("frmotorpos", fr.getCurrentPosition());
-            multTelemetry.addData("blmotorpos", bl.getCurrentPosition());
-            multTelemetry.addData("brmotorpos", br.getCurrentPosition());
-            multTelemetry.update();
+
+
+
+
         }
-        setAllPower(0.0);
-        /*
+        setAllPower(0);
+    }
 
-                Y O U R   C O D E   H E R E
-
-         */
+    public void strafe(double power, double ticks, double targetAngle, double strafeAngle, IMU gyro){
+        strafe(power, ticks, targetAngle, strafeAngle, 8, gyro);
     }
 
 

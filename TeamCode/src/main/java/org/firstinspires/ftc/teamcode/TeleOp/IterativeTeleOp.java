@@ -13,6 +13,7 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_R;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_UP;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB1;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB2;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB2;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.SQUARE;
@@ -265,7 +266,7 @@ public class IterativeTeleOp extends OpMode {
         double drive = controller.get(LEFT, INVERT_SHIFTED_Y);
         double strafe = controller.get(LEFT, SHIFTED_X);
 
-        if(controller.get(LB1, ButtonControls.ButtonState.DOWN)){
+        if(controller.get(LB1, ButtonControls.ButtonState.DOWN) || controller.get(LB2, DOWN)){
             power = 0.3;
         }else{
             power = 0.8;

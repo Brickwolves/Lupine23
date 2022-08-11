@@ -57,6 +57,10 @@ public class IMU {
         return MathUtils.pow(rateOfChange(), 2) * .5 * momentOfInertia;
     }
 
+    public double absAngularDist(double compareAngle){
+        return Math.abs(compareAngle - getAngle());
+    }
+
     /**
      * @return the wrapped angle
      */

@@ -35,6 +35,14 @@ public class MathUtils {
         return floorMod(Math.round(dividend * 1e6), divisor) / 1e6;
     }
 
+    public static Point shift(Point p, double shiftAngle){
+        double rawX = p.x;
+        double rawY = p.y;
+        double x = (rawX * Math.cos(Math.toRadians(shiftAngle))) - (rawY * Math.sin(Math.toRadians(shiftAngle)));
+        double y = (rawX * Math.sin(Math.toRadians(shiftAngle))) + (rawY * Math.cos(Math.toRadians(shiftAngle)));
+        return new Point(x,y);
+    }
+
     /**
      * @param x
      * @param a_min
