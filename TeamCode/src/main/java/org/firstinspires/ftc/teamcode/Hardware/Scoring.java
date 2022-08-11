@@ -4,21 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.blue;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.green;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.lowGoal;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midGoal;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.red;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.sharedGoal;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.superHeavyRed;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.whiteBlue;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.whiteGreen;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.whiteRed;
-import static org.firstinspires.ftc.teamcode.Utilities.Freight.FreightType.BALLS;
-import static org.firstinspires.ftc.teamcode.Utilities.Freight.FreightType.NONE;
-import static org.firstinspires.ftc.teamcode.Utilities.Freight.FreightType.REGULAR;
-import static org.firstinspires.ftc.teamcode.Utilities.Freight.FreightType.SUPERHEAVY;
-import static org.firstinspires.ftc.teamcode.Utilities.Freight.freight;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.lipPos;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.Color_Sensor;
@@ -44,9 +30,12 @@ public class Scoring {
         spool.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         spool.setPower(1);
 
-        lip.setPosition(0);
+        lip.setPosition(lipPos);
+        bucket.setPosition(1);
 
     }
+
+
 
     public void scoreHigh(){
 
@@ -70,7 +59,7 @@ public class Scoring {
         }
         if (time.seconds() < 1 && time.seconds() > 0.5) {
             bucket.setPosition(.9);
-            spool.setTargetPosition(midGoal);
+            spool.setTargetPosition(800);
         }
         if(time.seconds()>1 && time.seconds()<2)
             bucket.setPosition(0.15);
@@ -85,7 +74,7 @@ public class Scoring {
         }
         if (time.seconds() < 1 && time.seconds() > 0.5) {
             bucket.setPosition(.9);
-            spool.setTargetPosition(lowGoal);
+            spool.setTargetPosition(200);
         }
         if(time.seconds()>1 && time.seconds()<2)
             bucket.setPosition(0.15);
@@ -100,7 +89,7 @@ public class Scoring {
         }
         if (time.seconds() < 1 && time.seconds() > 0.5) {
             bucket.setPosition(.9);
-            spool.setTargetPosition(sharedGoal);
+            spool.setTargetPosition(100);
         }
         if(time.seconds()>1 && time.seconds()<2)
             bucket.setPosition(0.15);
@@ -109,30 +98,21 @@ public class Scoring {
     }
 
     public void deposit(){
-        if(time.seconds() < 1.2) {
+        if(time.seconds() < .6) {
             lip.setPosition(0);
         }
-        if(time.seconds() > 1.2 && time.seconds() < 1.8){
+        if(time.seconds() > .6 && time.seconds() < 1){
             bucket.setPosition(.9);
             spool.setTargetPosition(0);
         }
-        if(time.seconds() > 1.8 && time.seconds() < 2){
+        if(time.seconds() > 1 && time.seconds() < 2){
             bucket.setPosition(1);
+            lip.setPosition(lipPos);
         }
     }
 
-    public void checkFreight(){
-        if(bucketColor.updateRed() > red && bucketColor.updateGreen() > green && bucketColor.updateBlue() > blue){
-            freight = REGULAR;
-            if(bucketColor.getRedCacheValue() > superHeavyRed){
-                freight = SUPERHEAVY;
-            }else if(bucketColor.getRedCacheValue() > whiteRed && bucketColor.getBlueCacheValue() > whiteBlue && bucketColor.greenCacheValue > whiteGreen){
-                freight = BALLS;
-            }
-
-        }else{
-            freight = NONE;
-        }
+    public boolean checkFreight(){
+        return ((bucketColor.updateRed() > 46) && bucketColor.updateGreen() > 54 && bucketColor.updateBlue() > 35) && ((bucketColor.getRedCacheValue() > 103 && bucketColor.getRedCacheValue() < 813) && (bucketColor.getGreenCacheValue() > 75 && bucketColor.getGreenCacheValue() < 954) && (bucketColor.getBlueCacheValue() > 46 && bucketColor.getBlueCacheValue() < 866));
     }
 
 }

@@ -45,5 +45,9 @@ public class Robot {
       multTelemetry.update();
    }
 
+   public void cycle(int number){
+
+   }
+
 
 }

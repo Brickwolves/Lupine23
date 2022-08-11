@@ -35,6 +35,7 @@ import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
+import org.firstinspires.ftc.teamcode.Utilities.OpModeUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 
 //@Disabled
@@ -48,6 +49,7 @@ public class IterativeTeleOp extends OpMode {
     private boolean wasTurning;
     private boolean pid_on = false;
     private boolean pid_on_last_cycle = false;
+    private boolean KETurns = false;
 
     public enum SlidesState {HIGH, MIDDLE, LOW, SHARED, DOWN}
 
@@ -128,7 +130,7 @@ public class IterativeTeleOp extends OpMode {
         // Turn off PID if we manually turn
         // Turn on PID if we're not manually turning and the robot's stops rotating
         double currentRateOfChange = robot.gyro.rateOfChange();
-        if (!(rotation == 0)) pid_on = false;
+        if (rotation != 0){ pid_on = false;}
         else if (currentRateOfChange <= rateOfChange) pid_on = true;
 
 
@@ -137,15 +139,20 @@ public class IterativeTeleOp extends OpMode {
         if (controller.get(DPAD_R, TAP)) {
             setPoint = MathUtils.closestAngle(270, robot.gyro.getAngle());
             pid_on = true;
+            KETurns = false;
         } else if (controller.get(DPAD_L, TAP)) {
             setPoint = MathUtils.closestAngle(90, robot.gyro.getAngle());
             pid_on = true;
+            KETurns = false;
         } else if (controller.get(DPAD_UP, TAP)) {
             setPoint = MathUtils.closestAngle(0, robot.gyro.getAngle());
             pid_on = true;
+            KETurns = false;
         } else if (controller.get(DPAD_DN, TAP)) {
             setPoint = MathUtils.closestAngle(180, robot.gyro.getAngle());
             pid_on = true;
+            KETurns = false;
+
         }
 
 
@@ -172,12 +179,20 @@ public class IterativeTeleOp extends OpMode {
         }
 
         //INTAKE CODE
-        if (controller.get(RB2, ButtonControls.ButtonState.DOWN)) {
-            robot.intake.runIntake();
-        } else if (controller.get(RB1, ButtonControls.ButtonState.DOWN)) {
+        if(robot.scorer.checkFreight()) {
             robot.intake.runIntakeBackwards();
-        } else {
-            robot.intake.stopIntake(false);
+            robot.scorer.lip.setPosition(0.28);
+        }else {
+            if(slidesState == SlidesState.DOWN){
+                robot.scorer.lip.setPosition(.1);
+            }
+            if (controller.get(RB2, ButtonControls.ButtonState.DOWN)) {
+                robot.intake.runIntake();
+            } else if (controller.get(RB1, ButtonControls.ButtonState.DOWN)) {
+                robot.intake.runIntakeBackwards();
+            } else {
+                robot.intake.stopIntake(false);
+            }
         }
 
 
@@ -211,34 +226,38 @@ public class IterativeTeleOp extends OpMode {
         switch(slidesState){
             case HIGH:
                 robot.scorer.scoreHigh();
+                robot.intake.runIntakeBackwards();
                 break;
             case MIDDLE:
                 robot.scorer.scoreMid();
+                robot.intake.runIntakeBackwards();
                 break;
             case LOW:
                 robot.scorer.scoreLow();
+                robot.intake.runIntakeBackwards();
                 break;
             case SHARED:
                 robot.scorer.scoreShared();
+                robot.intake.runIntakeBackwards();
                 break;
             case DOWN:
                 robot.scorer.deposit();
                 break;
             }
 
+        //ODOMETRY WHEELS CONTROL
 
-        if (controller.get(TRIANGLE, DOWN)){
-            robot.odoWheels.raiseWheels();
-        }
-        //RUMBLE
-//        if(slidesState == SlidesState.DOWN) {
-//            if(!wasLoaded && freight != NONE){
-//                controller.src.rumble(1000);
-//                controller2.src.rumble(1000);
-//            }
-//            wasLoaded = freight != NONE;
-//
+//        if (controller.get(TRIANGLE, DOWN)){
+//            robot.odoWheels.raiseWheels();
 //        }
+        //RUMBLE
+        if(slidesState == SlidesState.DOWN) {
+            if(robot.scorer.checkFreight()){
+                controller.rumble(1000);
+                controller2.rumble(1000);
+            }
+
+        }
 
         //DRIVING
         controller.setJoystickShift(LEFT, robot.gyro.getAngle());
@@ -253,11 +272,14 @@ public class IterativeTeleOp extends OpMode {
         }
 
         robot.drivetrain.setDrivePower(drive, strafe, rotation, power);
+
+
+        //SIDE
+        Side.red = !controller2.get(RB1, TOGGLE);
     /*
          ----------- L O G G I N G -----------
                                             */
-        multTelemetry.addData("Intake Speed", robot.intake.getTPS());
-        multTelemetry.addData("Rate Of Change", robot.gyro.rateOfChange());
+        multTelemetry.addData("isLoaded", robot.scorer.checkFreight());
         multTelemetry.update();
     }
 

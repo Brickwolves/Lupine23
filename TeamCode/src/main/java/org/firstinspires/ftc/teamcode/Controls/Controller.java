@@ -120,8 +120,8 @@ public class Controller {
         }
     }
 
-    public void rumble(int seconds){
-        this.src.rumble(seconds);
+    public void rumble(int milliseconds){
+        this.src.rumble(milliseconds);
     }
 
     public boolean dpadPress(){

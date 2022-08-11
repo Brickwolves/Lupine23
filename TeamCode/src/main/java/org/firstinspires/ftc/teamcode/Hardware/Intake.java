@@ -4,9 +4,7 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIG
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.intakeD;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.intakeI;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.intakeP;
+
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -28,7 +26,7 @@ public class Intake {
     public Intake(){
         intakeMotor = hardwareMap.get(DcMotor.class, "intake");
         intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        intakePID = new PID(intakeP, intakeI, intakeD);
+        intakePID = new PID(0.002, 0, 0);
 
     }
 
