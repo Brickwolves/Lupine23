@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_AutoDistances.dist1;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_AutoDistances.dist2;
 import static org.firstinspires.ftc.teamcode.DashConstants.DuckPos.left;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
@@ -17,8 +19,7 @@ import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 
 
 @Autonomous(name="Warehouse Red", group="Autonomous Linear Opmode")
-public class RedLinearAutoWarehouse extends LinearOpMode
-{
+public class RedLinearAutoWarehouse extends LinearOpMode {
     Robot robot;
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -48,6 +49,12 @@ public class RedLinearAutoWarehouse extends LinearOpMode
             if(left){
                // robot.drivetrain.strafe();
             }else{
+                //robot.scorer.scoreHigh();
+                robot.drivetrain.strafe(.7,dist1,0,270, robot.gyro);
+                robot.drivetrain.strafe(.4,dist2,0,180, robot.gyro);
+                //robot.scorer.deposit();
+
+
 
             }
 

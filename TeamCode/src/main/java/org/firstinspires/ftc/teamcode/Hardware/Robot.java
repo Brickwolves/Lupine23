@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
+import static org.firstinspires.ftc.teamcode.Utilities.Loggers.Side.red;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
-import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.IMU;
 
 /**
@@ -19,8 +18,9 @@ public class Robot {
    public IMU gyro;
    public DuckSpinner duck;
    public Scoring scorer;
-   //public Camera camera;
-   public Robot(){
+   public ElapsedTime loopTimer1 = new ElapsedTime();
+
+   public Robot() {
       initRobot();
    }
 
@@ -38,16 +38,19 @@ public class Robot {
       scorer = new Scoring();
       //camera = new Camera("webcam");
 
-      gyro = new IMU( "imu");
+      gyro = new IMU("imu");
 
 
       multTelemetry.addData("Status", "Initialized");
       multTelemetry.update();
    }
 
-   public void cycle(int number){
+   public void cycle(int cycleNo) {
 
+//RED
+
+      if (red) {
+
+      }
    }
-
-
 }

@@ -138,16 +138,13 @@ public class Mecanum {
      * Translates the robot autonomously a certain distance known as ticks
      * @param ticks
      */
-    public void strafe(double power, double ticks, double targetAngle, double strafeAngle, double marginOfError, IMU gyro){
+    public void strafe(double power, double ticks, double targetAngle, double strafeAngle, IMU gyro, double marginOfError){
 
         // Reset our encoders to 0
         resetMotors();
         timeOut.reset();
 
-
-
-        strafeAngle = strafeAngle - 90;
-        targetAngle = targetAngle - 180;
+        strafeAngle = strafeAngle + 90;
 
         targetAngle = MathUtils.closestAngle(targetAngle, gyro.getAngle());
 
@@ -175,20 +172,23 @@ public class Mecanum {
 
             if(curHDist < ticks){
 
-                setDrivePower(power, shiftedPowers.x, rotationalPID.update(targetAngle - gyro.getAngle(), false), shiftedPowers.y);
+                setDrivePower(shiftedPowers.y, -shiftedPowers.x, rotationalPID.update(gyro.getAngle()-targetAngle, false), power);
             }else{
-                setDrivePower(power, 0, rotationalPID.update(targetAngle - gyro.getAngle(),false), 0);
+                setDrivePower(0, 0, rotationalPID.update(gyro.getAngle()-targetAngle,false), power);
             }
 
 
-
+            multTelemetry.addData("shifted x", shiftedPowers.x);
+            multTelemetry.addData("shifted y", shiftedPowers.y);
+            multTelemetry.addData("pid target angle",  rotationalPID.update(gyro.getAngle() -targetAngle,false));
+            multTelemetry.update();
 
         }
         setAllPower(0);
     }
 
     public void strafe(double power, double ticks, double targetAngle, double strafeAngle, IMU gyro){
-        strafe(power, ticks, targetAngle, strafeAngle, 8, gyro);
+        strafe(power, ticks, targetAngle, strafeAngle,  gyro,6);
     }
 
 

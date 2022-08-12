@@ -23,7 +23,6 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIG
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_Y;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.currentDuckPos;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
@@ -95,7 +94,6 @@ public class IterativeTeleOp extends OpMode {
 
 
         multTelemetry.addData("Status", "InitLoop");
-        multTelemetry.addData("Duck Pos", currentDuckPos);
         multTelemetry.update();
     }
 
@@ -179,7 +177,7 @@ public class IterativeTeleOp extends OpMode {
             robot.duck.stop();
         }
 
-        //INTAKE CODE
+        //INTAKE CODE and close lip
         if(robot.scorer.checkFreight()) {
             robot.intake.runIntakeBackwards();
             robot.scorer.lip.setPosition(0.28);

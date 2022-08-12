@@ -111,8 +111,28 @@ public class Scoring {
         }
     }
 
+    public void autoHigh(){
+        lip.setPosition(0.28);
+        bucket.setPosition(.9);
+        spool.setTargetPosition(1800);
+        while(spool.getCurrentPosition() < 1700){
+
+        }
+        bucket.setPosition(0.15);
+    }
+
+    public void autoDeposit(){
+        lip.setPosition(0);
+        bucket.setPosition(0.9);
+        spool.setTargetPosition(0);
+        while(spool.getCurrentPosition() > 50){
+        }
+        bucket.setPosition(1);
+        lip.setPosition(lipPos);
+    }
+
     public boolean checkFreight(){
-        return ((bucketColor.updateRed() > 46) && bucketColor.updateGreen() > 54 && bucketColor.updateBlue() > 35) && ((bucketColor.getRedCacheValue() > 103 && bucketColor.getRedCacheValue() < 813) && (bucketColor.getGreenCacheValue() > 75 && bucketColor.getGreenCacheValue() < 954) && (bucketColor.getBlueCacheValue() > 46 && bucketColor.getBlueCacheValue() < 866));
+        return ((bucketColor.updateRed() > 50) && bucketColor.updateGreen() > 50 && bucketColor.updateBlue() > 20) && ((bucketColor.getRedCacheValue() > 103 && bucketColor.getRedCacheValue() < 813) && (bucketColor.getGreenCacheValue() > 75 && bucketColor.getGreenCacheValue() < 954) && (bucketColor.getBlueCacheValue() > 46 && bucketColor.getBlueCacheValue() < 866));
     }
 
 }

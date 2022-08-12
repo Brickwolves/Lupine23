@@ -21,6 +21,9 @@ public class Intake {
     DcMotor intakeMotor;
     private long previousTime = System.currentTimeMillis();
     double previousChange = 0;
+    double updateIteration = 19;
+
+
 
 
     public Intake(){
@@ -30,8 +33,12 @@ public class Intake {
 
     }
 
+    double mostRecentAngle;
+    double currentAngle;
+    public boolean isMoving;
+
     public void runIntake(){
-        intakeMotor.setPower(0.8);
+        intakeMotor.setPower(1);
     }
 
     public void runIntakeBackwards(){
@@ -57,6 +64,23 @@ public class Intake {
         previousTime = System.currentTimeMillis();
         previousChange = change;
         return rateOfChange;
+    }
+
+    public void updateEncoders(){
+        updateIteration ++;
+        if(updateIteration == 20){
+            updateIteration = 0;
+            currentAngle = intakeMotor.getCurrentPosition();
+            isMoving = Math.abs(mostRecentAngle - currentAngle) > 2;
+            mostRecentAngle = currentAngle;
+        }
+    }
+    public boolean jammed(){
+        if(!isMoving && intakeMotor.getPower() != 0){
+            return(true);
+        }else{
+            return(false);
+        }
     }
 
 
