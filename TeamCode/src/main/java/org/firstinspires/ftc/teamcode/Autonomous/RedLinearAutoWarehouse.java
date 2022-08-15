@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_AutoDistances.angle1;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_AutoDistances.dist1;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_AutoDistances.dist2;
 import static org.firstinspires.ftc.teamcode.DashConstants.DuckPos.left;
@@ -49,10 +50,15 @@ public class RedLinearAutoWarehouse extends LinearOpMode {
             if(left){
                // robot.drivetrain.strafe();
             }else{
-                //robot.scorer.scoreHigh();
-                robot.drivetrain.strafe(.7,dist1,0,270, robot.gyro);
-                robot.drivetrain.strafe(.4,dist2,0,180, robot.gyro);
-                //robot.scorer.deposit();
+                robot.scorer.autoHigh();
+                robot.drivetrain.strafe(.7,500,0,270, robot.gyro);
+                robot.drivetrain.strafe(.4,350,0,180, robot.gyro);
+                robot.scorer.autoDeposit();
+                robot.drivetrain.strafe(.5, 700, 90,0,robot.gyro);
+                robot.cycle(1);
+
+
+
 
 
 

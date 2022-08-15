@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Diagnostics;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -17,6 +18,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.Dash_ServoDiagnostic.
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.DOWN;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TOUCHPAD;
 
+@Disabled
 @TeleOp(name = "ServoDiagnostic TeleOp", group="Linear TeleOp")
 public class ServoDiagnostic extends LinearOpMode {
 

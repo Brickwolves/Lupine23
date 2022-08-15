@@ -17,7 +17,6 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB2;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB2;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.SQUARE;
-import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TRIANGLE;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIGHT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_Y;
@@ -35,7 +34,6 @@ import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
-import org.firstinspires.ftc.teamcode.Utilities.OpModeUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 
 //@Disabled
@@ -178,7 +176,7 @@ public class IterativeTeleOp extends OpMode {
         }
 
         //INTAKE CODE and close lip
-        if(robot.scorer.checkFreight()) {
+        if(robot.scorer.isLoaded()) {
             robot.intake.runIntakeBackwards();
             robot.scorer.lip.setPosition(0.28);
         }else {
@@ -251,7 +249,7 @@ public class IterativeTeleOp extends OpMode {
 //        }
         //RUMBLE
         if(slidesState == SlidesState.DOWN) {
-            if(robot.scorer.checkFreight()){
+            if(robot.scorer.isLoaded()){
                 controller.rumble(1000);
                 controller2.rumble(1000);
             }
@@ -278,7 +276,7 @@ public class IterativeTeleOp extends OpMode {
     /*
          ----------- L O G G I N G -----------
                                             */
-        multTelemetry.addData("isLoaded", robot.scorer.checkFreight());
+        multTelemetry.addData("isLoaded", robot.scorer.isLoaded());
         multTelemetry.update();
     }
 

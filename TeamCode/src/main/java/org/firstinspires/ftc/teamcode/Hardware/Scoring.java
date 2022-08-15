@@ -123,6 +123,10 @@ public class Scoring {
 
     public void autoDeposit(){
         lip.setPosition(0);
+        time.reset();
+        while(time.seconds() < .8){
+
+        }
         bucket.setPosition(0.9);
         spool.setTargetPosition(0);
         while(spool.getCurrentPosition() > 50){
@@ -131,7 +135,7 @@ public class Scoring {
         lip.setPosition(lipPos);
     }
 
-    public boolean checkFreight(){
+    public boolean isLoaded(){
         return ((bucketColor.updateRed() > 50) && bucketColor.updateGreen() > 50 && bucketColor.updateBlue() > 20) && ((bucketColor.getRedCacheValue() > 103 && bucketColor.getRedCacheValue() < 813) && (bucketColor.getGreenCacheValue() > 75 && bucketColor.getGreenCacheValue() < 954) && (bucketColor.getBlueCacheValue() > 46 && bucketColor.getBlueCacheValue() < 866));
     }
 

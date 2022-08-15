@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.wolfpackmachina.bettersensors.Sensors.Gyro;
 
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.Color_Sensor;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.IMU;
 import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
@@ -33,11 +34,17 @@ public class Mecanum {
     }
 
     private ElapsedTime timeOut = new ElapsedTime();
+
     DcMotor fl;
     DcMotor fr;
     DcMotor bl;
     DcMotor br;
     PID rotationalPID;
+    public Color_Sensor flColor, blColor, frColor, brColor;
+
+
+
+
 
     public void initMecanum(){
 
@@ -54,6 +61,20 @@ public class Mecanum {
         br.setDirection(DcMotorSimple.Direction.FORWARD);
 
         rotationalPID = new PID(proportionalWeight, integralWeight , derivativeWeight);
+
+        flColor = new Color_Sensor();
+        flColor.init("flColor");
+
+        blColor = new Color_Sensor();
+        blColor.init("blColor");
+
+        frColor = new Color_Sensor();
+        frColor.init("frColor");
+
+        brColor = new Color_Sensor();
+        brColor.init("brColor");
+
+
 
         multTelemetry.addData("Status", "Initialized");
         multTelemetry.update();
@@ -144,7 +165,7 @@ public class Mecanum {
         resetMotors();
         timeOut.reset();
 
-        strafeAngle = strafeAngle + 90;
+        strafeAngle = strafeAngle - 90;
 
         targetAngle = MathUtils.closestAngle(targetAngle, gyro.getAngle());
 
@@ -172,7 +193,7 @@ public class Mecanum {
 
             if(curHDist < ticks){
 
-                setDrivePower(shiftedPowers.y, -shiftedPowers.x, rotationalPID.update(gyro.getAngle()-targetAngle, false), power);
+                setDrivePower(-shiftedPowers.y, -shiftedPowers.x, rotationalPID.update(gyro.getAngle()-targetAngle, false), power);
             }else{
                 setDrivePower(0, 0, rotationalPID.update(gyro.getAngle()-targetAngle,false), power);
             }
@@ -191,6 +212,10 @@ public class Mecanum {
         strafe(power, ticks, targetAngle, strafeAngle,  gyro,6);
     }
 
+    public void foreverDriveStraight(double power, double targetAngle, IMU gyro){
+        setDrivePower(power,0, rotationalPID.update(gyro.getAngle() - targetAngle, false), 1);
+    }
+
 
 
     /**
@@ -204,9 +229,6 @@ public class Mecanum {
 
         while(timer.seconds() < 1.5){
             setDrivePower(0.0, 0.0, -rotationalPID.update(targetAngle - currentAngle.getAngle(), true), 1.0);
-            multTelemetry.addData("target Angle", targetAngle);
-            multTelemetry.addData("Angle", currentAngle.getAngle());
-            multTelemetry.update();
         }
         setAllPower(0.0);
         /*
@@ -235,6 +257,8 @@ public class Mecanum {
          */
         return 0;
     }
+
+
 
 
 }

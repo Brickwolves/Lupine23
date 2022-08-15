@@ -19,6 +19,7 @@ public class Robot {
    public DuckSpinner duck;
    public Scoring scorer;
    public ElapsedTime loopTimer1 = new ElapsedTime();
+   private ElapsedTime sleepTime = new ElapsedTime();
 
    public Robot() {
       initRobot();
@@ -50,7 +51,45 @@ public class Robot {
 //RED
 
       if (red) {
+         loopTimer1.reset();
+
+         //drive forward until it's been 1 second or you see the white line - doesn't actually see the white line often
+         while(drivetrain.flColor.updateRed() < 80 && drivetrain.frColor.updateRed() < 80 && loopTimer1.seconds() < 1){
+
+            drivetrain.foreverDriveStraight(.4, 90, gyro);
+         }
+         intake.runIntake();
+
+         //while bucket isn't loaded
+         while(!scorer.isLoaded()) {
+            loopTimer1.reset();
+            //if bucket isn't loaded and it hasn't been three seconds and the intake isn't jammed drive forward with intake on
+            while (!scorer.isLoaded() && loopTimer1.seconds() < 3 && !intake.jammed()) {
+               drivetrain.foreverDriveStraight(.3, 90, gyro);
+               intake.updateEncoders();
+            }
+            //if any of these conditions happen check if it's the bucket one, if it is break loop
+            if(scorer.isLoaded()){
+               break;
+            }
+            //if it wasn't loaded then backup
+            intake.runIntakeBackwards();
+            drivetrain.strafe(.6,150,90,270,gyro);
+            //and start over
+            multTelemetry.addData("isLoaded", scorer.isLoaded());
+            multTelemetry.addData("intake Jammed", intake.jammed());
+            multTelemetry.update();
+         }
+
+
 
       }
+   }
+
+   public void sleep(double seconds){
+      while (sleepTime.seconds() <  seconds){
+
+      }
+
    }
 }

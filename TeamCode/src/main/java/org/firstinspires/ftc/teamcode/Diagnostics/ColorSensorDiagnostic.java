@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Diagnostics;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -20,6 +21,7 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TOUCHPAD;
 
 import android.graphics.Color;
+
 
 @TeleOp(name = "ColorSensorDiagnostic TeleOp", group="Linear TeleOp")
 public class ColorSensorDiagnostic extends LinearOpMode {
