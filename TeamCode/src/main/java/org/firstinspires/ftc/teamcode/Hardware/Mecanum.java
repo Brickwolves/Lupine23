@@ -199,10 +199,6 @@ public class Mecanum {
             }
 
 
-            multTelemetry.addData("shifted x", shiftedPowers.x);
-            multTelemetry.addData("shifted y", shiftedPowers.y);
-            multTelemetry.addData("pid target angle",  rotationalPID.update(gyro.getAngle() -targetAngle,false));
-            multTelemetry.update();
 
         }
         setAllPower(0);

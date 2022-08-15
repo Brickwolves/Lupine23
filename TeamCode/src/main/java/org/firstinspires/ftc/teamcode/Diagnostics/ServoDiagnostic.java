@@ -18,7 +18,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.Dash_ServoDiagnostic.
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.DOWN;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TOUCHPAD;
 
-@Disabled
+
 @TeleOp(name = "ServoDiagnostic TeleOp", group="Linear TeleOp")
 public class ServoDiagnostic extends LinearOpMode {
 

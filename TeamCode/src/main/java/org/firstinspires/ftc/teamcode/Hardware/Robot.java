@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_AutoDistances.angle1;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_AutoDistances.angle2;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_AutoDistances.dist1;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_AutoDistances.dist2;
 import static org.firstinspires.ftc.teamcode.Utilities.Loggers.Side.red;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
@@ -58,15 +62,16 @@ public class Robot {
 
             drivetrain.foreverDriveStraight(.4, 90, gyro);
          }
-         intake.runIntake();
 
          //while bucket isn't loaded
          while(!scorer.isLoaded()) {
             loopTimer1.reset();
-            //if bucket isn't loaded and it hasn't been three seconds and the intake isn't jammed drive forward with intake on
-            while (!scorer.isLoaded() && loopTimer1.seconds() < 3 && !intake.jammed()) {
+            intake.updateEncoders();
+            intake.runIntake();
+            //if bucket isn't loaded and it hasn't been three seconds drive forward with intake on -ADD INTAKE JAM MAYBE
+            while (!scorer.isLoaded() && loopTimer1.seconds() < 3) {
                drivetrain.foreverDriveStraight(.3, 90, gyro);
-               intake.updateEncoders();
+
             }
             //if any of these conditions happen check if it's the bucket one, if it is break loop
             if(scorer.isLoaded()){
@@ -81,12 +86,25 @@ public class Robot {
             multTelemetry.update();
          }
 
+         //Loaded now, intake backwards and reverse
+         intake.runIntakeBackwards();
+         drivetrain.strafe(.6,200,90,290,gyro);
+         while(drivetrain.frColor.updateRed() < 80 && drivetrain.flColor.updateRed() < 80){
+            drivetrain.foreverDriveStraight(-.2,90, gyro);
+         }
+         scorer.autoHigh();
+         drivetrain.strafe(.6,400,90,280,gyro);
+         drivetrain.strafe(.6,dist1, 90,200, gyro);
+         drivetrain.strafe(.6,dist2, angle1,angle2, gyro);
+         sleep(4);
+
 
 
       }
    }
 
    public void sleep(double seconds){
+      sleepTime.reset();
       while (sleepTime.seconds() <  seconds){
 
       }
