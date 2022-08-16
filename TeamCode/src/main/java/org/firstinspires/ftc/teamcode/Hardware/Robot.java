@@ -18,7 +18,7 @@ public class Robot {
 
    public Intake intake;
    public Mecanum drivetrain;
-   public OdoWheels odoWheels;
+   //public OdoWheels odoWheels;
    public IMU gyro;
    public DuckSpinner duck;
    public Scoring scorer;
@@ -36,7 +36,7 @@ public class Robot {
        */
 
       //initialized Mecanum
-      odoWheels = new OdoWheels();
+      //odoWheels = new OdoWheels();
       intake = new Intake();
       drivetrain = new Mecanum();
       duck = new DuckSpinner("duck");
@@ -63,6 +63,8 @@ public class Robot {
             drivetrain.foreverDriveStraight(.4, 90, gyro);
          }
 
+
+
          //while bucket isn't loaded
          while(!scorer.isLoaded()) {
             loopTimer1.reset();
@@ -79,7 +81,7 @@ public class Robot {
             }
             //if it wasn't loaded then backup
             intake.runIntakeBackwards();
-            drivetrain.strafe(.6,150,90,270,gyro);
+            drivetrain.strafe(.7,300,90,270,gyro);
             //and start over
             multTelemetry.addData("isLoaded", scorer.isLoaded());
             multTelemetry.addData("intake Jammed", intake.jammed());
@@ -88,15 +90,18 @@ public class Robot {
 
          //Loaded now, intake backwards and reverse
          intake.runIntakeBackwards();
-         drivetrain.strafe(.6,200,90,290,gyro);
+         drivetrain.strafe(.6,200,90,300,gyro);
+         //Crossing White Line
+         loopTimer1.reset();
          while(drivetrain.frColor.updateRed() < 80 && drivetrain.flColor.updateRed() < 80){
             drivetrain.foreverDriveStraight(-.2,90, gyro);
          }
          scorer.autoHigh();
-         drivetrain.strafe(.6,400,90,280,gyro);
-         drivetrain.strafe(.6,dist1, 90,200, gyro);
-         drivetrain.strafe(.6,dist2, angle1,angle2, gyro);
-         sleep(4);
+//         drivetrain.strafe(.6,100,90,280,gyro);
+         drivetrain.strafe(.6,200, 90,200, gyro);
+         drivetrain.strafe(.6,250, 20,200, gyro);
+         scorer.autoDeposit();
+
 
 
 
