@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import static org.firstinspires.ftc.teamcode.DashConstants.DuckPos.left;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
@@ -43,11 +44,18 @@ public class RedLinearAutoDuck extends LinearOpMode
         waitForStart();
 
         if (opModeIsActive()){
+            if(left){
+                robot.scorer.autoLow();
+                robot.drivetrain.strafe(.8,400,0,90, robot.gyro);
+                robot.drivetrain.strafe(.4,300,0,180, robot.gyro);
 
-
-            /*
-                    Y O U R   C O D E   H E R E
-                                                   */
+            }else{
+                robot.scorer.autoHigh();
+                robot.drivetrain.strafe(.8,400,0,90, robot.gyro);
+                robot.drivetrain.strafe(.4,320,0,180, robot.gyro);
+            }
+            robot.sleep(.5);
+            robot.scorer.autoDeposit();
 
         }
     }

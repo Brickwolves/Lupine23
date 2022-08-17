@@ -5,5 +5,5 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class DuckPos {
     //Left is low goal
-    public static boolean left = false;
+    public static boolean left = true;
 }

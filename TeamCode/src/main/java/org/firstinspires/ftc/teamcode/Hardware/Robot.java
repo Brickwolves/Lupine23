@@ -57,11 +57,8 @@ public class Robot {
       if (red) {
          loopTimer1.reset();
 
-         //drive forward until it's been 1 second or you see the white line - doesn't actually see the white line often
-         while(drivetrain.flColor.updateRed() < 80 && drivetrain.frColor.updateRed() < 80 && loopTimer1.seconds() < 1){
-
-            drivetrain.foreverDriveStraight(.4, 90, gyro);
-         }
+         //drive forward a bit
+         drivetrain.strafe(.7,600,90,80,gyro);
 
 
 
@@ -90,16 +87,17 @@ public class Robot {
 
          //Loaded now, intake backwards and reverse
          intake.runIntakeBackwards();
-         drivetrain.strafe(.6,200,90,300,gyro);
+         drivetrain.strafe(.6,275,90,300,gyro);
          //Crossing White Line
          loopTimer1.reset();
-         while(drivetrain.frColor.updateRed() < 80 && drivetrain.flColor.updateRed() < 80){
+         while(drivetrain.brColor.updateRed() < 80 && drivetrain.blColor.updateRed() < 80){
             drivetrain.foreverDriveStraight(-.2,90, gyro);
          }
+         drivetrain.strafe(.6,300,90,280,gyro);
          scorer.autoHigh();
-//         drivetrain.strafe(.6,100,90,280,gyro);
+         drivetrain.strafe(.6,300,90,280,gyro);
          drivetrain.strafe(.6,200, 90,200, gyro);
-         drivetrain.strafe(.6,250, 20,200, gyro);
+         drivetrain.strafe(.6,250, 10,200, gyro);
          scorer.autoDeposit();
 
 

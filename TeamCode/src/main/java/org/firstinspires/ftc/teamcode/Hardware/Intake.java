@@ -29,6 +29,7 @@ public class Intake {
     public Intake(){
         intakeMotor = hardwareMap.get(DcMotor.class, "intake");
         intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         intakePID = new PID(0.002, 0, 0);
 
     }

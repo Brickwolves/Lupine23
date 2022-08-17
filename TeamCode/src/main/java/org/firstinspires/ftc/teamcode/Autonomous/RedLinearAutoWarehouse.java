@@ -48,27 +48,26 @@ public class RedLinearAutoWarehouse extends LinearOpMode {
         if (opModeIsActive()){
 
             if(left){
-               // robot.drivetrain.strafe();
+                robot.scorer.autoLow();
+                robot.drivetrain.strafe(.8,500,0,270, robot.gyro);
+                robot.drivetrain.strafe(.4,270,10,180, robot.gyro);
+
             }else{
                 robot.scorer.autoHigh();
                 robot.drivetrain.strafe(.8,500,0,270, robot.gyro);
                 robot.drivetrain.strafe(.4,320,10,180, robot.gyro);
-                robot.sleep(.5);
-                robot.scorer.autoDeposit();
-                robot.drivetrain.strafe(.8, 700, 90,0,robot.gyro);
-                robot.cycle(1);
-                robot.drivetrain.strafe(.8,500,90,0,robot.gyro);
-                robot.cycle(2);
-                robot.drivetrain.strafe(.8,500,90,0,robot.gyro);
-                robot.cycle(3);
-
-
-
-
-
 
 
             }
+            robot.sleep(.5);
+            robot.scorer.autoDeposit();
+            robot.drivetrain.strafe(.8, 700, 90,0,robot.gyro);
+            robot.cycle(1);
+            robot.drivetrain.strafe(.8,500,90,0,robot.gyro);
+            robot.cycle(2);
+            robot.drivetrain.strafe(.8,500,90,0,robot.gyro);
+            robot.drivetrain.strafe(.8,1000,90,80, robot.gyro);
+            robot.drivetrain.strafe(.6,200,180,180, robot.gyro, 1);
 
         }
     }

@@ -213,6 +213,7 @@ public class IterativeTeleOp extends OpMode {
         if(controller2.get(DPAD_DN, TAP) && slidesState != SlidesState.SHARED){
             slidesState = SlidesState.SHARED;
             robot.scorer.time.reset();
+            robot.intake.stopIntake(false);
         }
 
         if(controller2.get(SQUARE, TAP) && slidesState != SlidesState.DOWN){
@@ -231,11 +232,11 @@ public class IterativeTeleOp extends OpMode {
                 break;
             case LOW:
                 robot.scorer.scoreLow();
-                robot.intake.runIntakeBackwards();
+                robot.intake.stopIntake(false);
                 break;
             case SHARED:
                 robot.scorer.scoreShared();
-                robot.intake.runIntakeBackwards();
+                robot.intake.stopIntake(false);
                 break;
             case DOWN:
                 robot.scorer.deposit();
