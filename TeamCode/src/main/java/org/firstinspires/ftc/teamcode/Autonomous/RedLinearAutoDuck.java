@@ -46,17 +46,18 @@ public class RedLinearAutoDuck extends LinearOpMode
         if (opModeIsActive()){
             if(left){
                 robot.scorer.autoLow();
-                robot.drivetrain.strafe(.8,400,0,90, robot.gyro);
-                robot.drivetrain.strafe(.4,300,0,180, robot.gyro);
+                robot.drivetrain.strafe(.8,830,0,90, robot.gyro);
+                robot.drivetrain.strafe(.4,280,0,180, robot.gyro);
 
             }else{
                 robot.scorer.autoHigh();
-                robot.drivetrain.strafe(.8,400,0,90, robot.gyro);
-                robot.drivetrain.strafe(.4,320,0,180, robot.gyro);
+                robot.drivetrain.strafe(.8,800,0,90, robot.gyro);
+                robot.drivetrain.strafe(.4,300,0,180, robot.gyro);
             }
             robot.sleep(.5);
             robot.scorer.autoDeposit();
-
+            robot.drivetrain.strafe(.8,400,315,315,robot.gyro);
+            robot.drivetrain.strafe(.5,1000,315,270,robot.gyro);
         }
     }
 }

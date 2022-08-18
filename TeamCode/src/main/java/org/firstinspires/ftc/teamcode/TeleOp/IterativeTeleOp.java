@@ -177,7 +177,11 @@ public class IterativeTeleOp extends OpMode {
 
         //INTAKE CODE and close lip
         if(robot.scorer.isLoaded()) {
-            robot.intake.runIntakeBackwards();
+            if(!controller.get(RB2, DOWN)) {
+                robot.intake.runIntakeBackwards();
+            }else{
+                robot.intake.runIntake();
+            }
             robot.scorer.lip.setPosition(0.28);
         }else {
             if(slidesState == SlidesState.DOWN){

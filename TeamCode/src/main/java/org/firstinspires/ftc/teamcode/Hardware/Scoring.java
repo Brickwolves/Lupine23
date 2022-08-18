@@ -31,7 +31,7 @@ public class Scoring {
         spool.setPower(1);
 
         lip.setPosition(lipPos);
-        bucket.setPosition(1);
+        bucket.setPosition(.95);
 
     }
 
@@ -138,12 +138,12 @@ public class Scoring {
         spool.setTargetPosition(0);
         while(spool.getCurrentPosition() > 50){
         }
-        bucket.setPosition(1);
+        bucket.setPosition(.95);
         lip.setPosition(lipPos);
     }
 
     public boolean isLoaded(){
-        return ((bucketColor.updateRed() > 50) && bucketColor.updateGreen() > 50 && bucketColor.updateBlue() > 20) && ((bucketColor.getRedCacheValue() > 103 && bucketColor.getRedCacheValue() < 813) && (bucketColor.getGreenCacheValue() > 75 && bucketColor.getGreenCacheValue() < 954) && (bucketColor.getBlueCacheValue() > 46 && bucketColor.getBlueCacheValue() < 866));
+        return ((bucketColor.updateRed() > 60) || bucketColor.updateGreen() > 90);// && ((bucketColor.getRedCacheValue() > 103 && bucketColor.getRedCacheValue() < 813) && (bucketColor.getGreenCacheValue() > 75 && bucketColor.getGreenCacheValue() < 954) && (bucketColor.getBlueCacheValue() > 46 && bucketColor.getBlueCacheValue() < 866));
     }
 
 }
