@@ -17,9 +17,10 @@ public class VisionUtils {
      */
     public static double IMG_WIDTH = 432;
     public static double IMG_HEIGHT = 240;
-    public static final double X_FOV = 72;
-    public static final double Y_FOV = 43;
-    public static final double CAMERA_HEIGHT = 0.19;
+    public static final double X_FOV = 45.25;
+    public static final double Y_FOV = 34.75;
+    // WORKING IN INCHES
+    public static final double CAMERA_HEIGHT = 4;
     public static final double BACK_WEBCAM_HEIGHT = 0.19;
 
     // Note: All measurements in CM
