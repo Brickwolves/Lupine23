@@ -47,7 +47,7 @@ public class Scoring {
             spool.setTargetPosition(1800);
         }
         if(time.seconds()>1 && time.seconds()<2)
-        bucket.setPosition(0);
+        bucket.setPosition(0.1);
 
 
     }
@@ -62,7 +62,7 @@ public class Scoring {
             spool.setTargetPosition(800);
         }
         if(time.seconds()>1 && time.seconds()<2)
-            bucket.setPosition(0);
+            bucket.setPosition(0.1);
 
 
     }
@@ -77,7 +77,7 @@ public class Scoring {
             spool.setTargetPosition(200);
         }
         if(time.seconds()>1 && time.seconds()<2)
-            bucket.setPosition(0);
+            bucket.setPosition(0.1);
 
 
     }
@@ -99,6 +99,7 @@ public class Scoring {
 
     public void deposit(){
         if(time.seconds() < .6) {
+            bucket.setPosition(0);
             lip.setPosition(0);
         }
         if(time.seconds() > .6 && time.seconds() < 1){
