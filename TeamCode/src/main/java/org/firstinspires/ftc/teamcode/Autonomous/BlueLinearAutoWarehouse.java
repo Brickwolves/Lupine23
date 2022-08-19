@@ -66,12 +66,15 @@ public class BlueLinearAutoWarehouse extends LinearOpMode {
             robot.sleep(.5);
             robot.scorer.autoDeposit();
             robot.drivetrain.strafe(.8, 900, 270,0,robot.gyro);
-            robot.cycle(1);
-            robot.drivetrain.strafe(.8,650,270,0,robot.gyro);
-            robot.cycle(2);
-            robot.drivetrain.strafe(.8,650,270,0,robot.gyro);
-            robot.drivetrain.strafe(.8,700,270,260, robot.gyro);
-            IMU_DATUM = robot.gyro.getAngle();
+
+            robot.drivetrain.strafe(.4,900,270,270,robot.gyro);
+            robot.drivetrain.strafe(.4,600,180,270,robot.gyro);
+//            robot.cycle(1);
+//            robot.drivetrain.strafe(.8,650,270,0,robot.gyro);
+//            robot.cycle(2);
+//            robot.drivetrain.strafe(.8,650,270,0,robot.gyro);
+//            robot.drivetrain.strafe(.8,700,270,260, robot.gyro);
+            IMU_DATUM = 0;
         }
     }
 }

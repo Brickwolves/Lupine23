@@ -58,7 +58,7 @@ public class RedLinearAutoWarehouse extends LinearOpMode {
 
             }else{
                 robot.scorer.autoHigh();
-                robot.drivetrain.strafe(.8,550,0,270, robot.gyro);
+                robot.drivetrain.strafe(.8,500,0,270, robot.gyro);
                 robot.drivetrain.strafe(.4,320,10,180, robot.gyro);
 
 

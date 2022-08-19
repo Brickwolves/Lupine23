@@ -82,7 +82,6 @@ public class IterativeTeleOp extends OpMode {
                                                     */
 
 
-        IMU_DATUM = IMU_DATUM + 180;
         robot.gyro.setDatum(IMU_DATUM);
 
 

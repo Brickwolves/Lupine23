@@ -94,7 +94,7 @@ public class Robot {
          while(drivetrain.brColor.updateRed() < 80 && drivetrain.blColor.updateRed() < 80){
             drivetrain.foreverDriveStraight(-.2,90, gyro);
          }
-         drivetrain.strafe(.6,400,90,280,gyro);
+         drivetrain.strafe(.6,500,90,280,gyro);
          scorer.autoHigh();
          drivetrain.strafe(.6,200, 90,200, gyro);
          drivetrain.strafe(.6,350, 10,200, gyro);

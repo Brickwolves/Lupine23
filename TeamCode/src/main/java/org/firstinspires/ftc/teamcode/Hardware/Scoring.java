@@ -43,11 +43,11 @@ public class Scoring {
             lip.setPosition(0.28);
         }
         if (time.seconds() < 1 && time.seconds() > 0.5) {
-            bucket.setPosition(.94);
+            bucket.setPosition(.9);
             spool.setTargetPosition(1800);
         }
         if(time.seconds()>1 && time.seconds()<2)
-        bucket.setPosition(0.15);
+        bucket.setPosition(0);
 
 
     }
@@ -58,11 +58,11 @@ public class Scoring {
             lip.setPosition(0.28);
         }
         if (time.seconds() < 1 && time.seconds() > 0.5) {
-            bucket.setPosition(.94);
+            bucket.setPosition(.9);
             spool.setTargetPosition(800);
         }
         if(time.seconds()>1 && time.seconds()<2)
-            bucket.setPosition(0.1);
+            bucket.setPosition(0);
 
 
     }
@@ -73,11 +73,11 @@ public class Scoring {
             lip.setPosition(0.28);
         }
         if (time.seconds() < 1 && time.seconds() > 0.5) {
-            bucket.setPosition(.94);
+            bucket.setPosition(.9);
             spool.setTargetPosition(200);
         }
         if(time.seconds()>1 && time.seconds()<2)
-            bucket.setPosition(0.1);
+            bucket.setPosition(0);
 
 
     }
@@ -107,7 +107,7 @@ public class Scoring {
         }
         if(time.seconds() > 1 && time.seconds() < 2){
             bucket.setPosition(.95);
-            lip.setPosition(0.05);
+            lip.setPosition(lipPos);
         }
     }
 
