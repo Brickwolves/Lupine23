@@ -159,7 +159,7 @@ public class Mecanum {
      * Translates the robot autonomously a certain distance known as ticks
      * @param ticks
      */
-    public void strafe(double power, double ticks, double targetAngle, double strafeAngle, IMU gyro, double marginOfError){
+    public void strafe(double power, double ticks, double targetAngle, double strafeAngle, IMU gyro, double marginOfError, double acel, double decel){
 
         // Reset our encoders to 0
         resetMotors();
@@ -182,34 +182,49 @@ public class Mecanum {
         // Initialize our current position variables
         Point curPos;
         double curHDist = 0;
+        double distanceTraveled;
 
         while ((curHDist < ticks || gyro.absAngularDist(targetAngle) > marginOfError) && timeOut.seconds() < ticks/500){
             curPos = getPosition(true);
-
+            distanceTraveled = getPosition();
 
             curHDist = Math.hypot(curPos.x, curPos.y);
             Point shiftedPowers = MathUtils.shift(new Point(xPower, yPower), -gyro.getAngle());
 
+            //sets the power based on an aceleration program
+            double currentPower = powerRamp(distanceTraveled, ticks - distanceTraveled, power, acel, decel);
 
             if(curHDist < ticks){
 
-                setDrivePower(-shiftedPowers.y, -shiftedPowers.x, rotationalPID.update(gyro.getAngle()-targetAngle, false), power);
+                setDrivePower(-shiftedPowers.y, -shiftedPowers.x, rotationalPID.update(gyro.getAngle()-targetAngle, false), currentPower);
             }else{
-                setDrivePower(0, 0, rotationalPID.update(gyro.getAngle()-targetAngle,false), power);
+                setDrivePower(0, 0, rotationalPID.update(gyro.getAngle()-targetAngle,false), currentPower);
             }
 
-
+            multTelemetry.addData("power", currentPower);
+            multTelemetry.update();
 
         }
         setAllPower(0);
     }
 
     public void strafe(double power, double ticks, double targetAngle, double strafeAngle, IMU gyro){
-        strafe(power, ticks, targetAngle, strafeAngle,  gyro,6);
+        strafe(power, ticks, targetAngle, strafeAngle,  gyro, 6, 0.8, 0.5);
     }
+
 
     public void foreverDriveStraight(double power, double targetAngle, IMU gyro){
         setDrivePower(power,0, rotationalPID.update(gyro.getAngle() - targetAngle, false), 1);
+    }
+
+
+
+    public double powerRamp(double distanceTraveled, double distanceFromFinish, double MaxSpeed, double acel, double decel){
+        distanceTraveled = distanceTraveled + 0.0001;
+        distanceFromFinish = distanceFromFinish + 0.0001;
+        double aceleration = (Math.sqrt(distanceTraveled)*acel) + 0.2;
+        double deceleration = (Math.sqrt(distanceFromFinish)*decel) + 0.2;
+        return Math.min(aceleration, Math.min(deceleration, MaxSpeed));
     }
 
 
@@ -236,23 +251,8 @@ public class Mecanum {
     }
 
 
-    /**
-     * A mathematical function that optimizes the ramping of power to the motors during autonomous
-     * strafes.
-     * @param position
-     * @param distance
-     * @param acceleration
-     * @return the coefficient [0, 1] of our power
-     */
-    public static double powerRamp(double position, double distance, double acceleration, double deceleration, double maxSpeed){
 
-        /*
 
-                Y O U R   C O D E   H E R E
-
-         */
-        return 0;
-    }
 
 
 
