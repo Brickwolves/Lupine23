@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 @Autonomous(name="Warehouse Blue", group="Autonomous Linear Opmode")
 public class BlueLinearAutoWarehouse extends LinearOpMode {
     Robot robot;
-    Camera camera; //declare the camera
+    //Camera camera; //declare the camera
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -30,7 +30,7 @@ public class BlueLinearAutoWarehouse extends LinearOpMode {
         setOpMode(this);
         Side.setBlue();
 
-        camera = new Camera("webcam"); //camera starts streaming
+        //camera = new Camera("webcam"); //camera starts streaming
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -50,19 +50,19 @@ public class BlueLinearAutoWarehouse extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()){
-
-            if(currentDuckPos == Dash_Vision.DuckPosition.L_BARCODE){
-                robot.scorer.autoLow();
-                robot.drivetrain.strafe(.8,700,0,90, robot.gyro);
-                robot.drivetrain.strafe(.4,200,350,180, robot.gyro);
-
-            }else{
+//
+//            if(currentDuckPos == Dash_Vision.DuckPosition.L_BARCODE){
+//                robot.scorer.autoLow();
+//                robot.drivetrain.strafe(.8,700,0,90, robot.gyro);
+//                robot.drivetrain.strafe(.4,200,350,180, robot.gyro);
+//
+//            }else{
                 robot.scorer.autoHigh();
                 robot.drivetrain.strafe(.8,900,0,90, robot.gyro);
                 robot.drivetrain.strafe(.4,250,350,180, robot.gyro);
 
 
-            }
+ //           }
             robot.sleep(.5);
             robot.scorer.autoDeposit();
             robot.drivetrain.strafe(.8, 900, 270,0,robot.gyro);

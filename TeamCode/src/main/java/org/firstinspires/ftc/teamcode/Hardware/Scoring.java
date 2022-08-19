@@ -99,8 +99,8 @@ public class Scoring {
 
     public void deposit(){
         if(time.seconds() < .6) {
-            bucket.setPosition(0);
-            lip.setPosition(0);
+            bucket.setPosition(0.05);
+            lip.setPosition(0.05);
         }
         if(time.seconds() > .6 && time.seconds() < 1){
             bucket.setPosition(.9);

@@ -38,7 +38,13 @@ public class Camera {
             {
 
             }
+
+            public void close(){
+                webcam.closeCameraDevice();
+            }
+
         });
+
 
     }
 
