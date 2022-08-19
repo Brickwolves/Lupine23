@@ -62,7 +62,7 @@ public class Scoring {
             spool.setTargetPosition(800);
         }
         if(time.seconds()>1 && time.seconds()<2)
-            bucket.setPosition(0.15);
+            bucket.setPosition(0.1);
 
 
     }
@@ -77,7 +77,7 @@ public class Scoring {
             spool.setTargetPosition(200);
         }
         if(time.seconds()>1 && time.seconds()<2)
-            bucket.setPosition(0.15);
+            bucket.setPosition(0.1);
 
 
     }
@@ -92,7 +92,7 @@ public class Scoring {
             spool.setTargetPosition(100);
         }
         if(time.seconds()>1 && time.seconds()<2)
-            bucket.setPosition(0.15);
+            bucket.setPosition(0.1);
 
 
     }
@@ -106,7 +106,7 @@ public class Scoring {
             spool.setTargetPosition(0);
         }
         if(time.seconds() > 1 && time.seconds() < 2){
-            bucket.setPosition(1);
+            bucket.setPosition(.95);
             lip.setPosition(lipPos);
         }
     }
@@ -118,14 +118,14 @@ public class Scoring {
         while(spool.getCurrentPosition() < 1700){
 
         }
-        bucket.setPosition(0.15);
+        bucket.setPosition(0.1);
     }
     public void autoLow(){
         lip.setPosition(0.28);
         bucket.setPosition(.9);
         spool.setTargetPosition(200);
         while(spool.getCurrentPosition() < 100);
-        bucket.setPosition(0.15);
+        bucket.setPosition(0.1);
     }
 
     public void autoDeposit(){

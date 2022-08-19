@@ -76,8 +76,6 @@ public class Mecanum {
 
 
 
-        multTelemetry.addData("Status", "Initialized");
-        multTelemetry.update();
 
 
     }

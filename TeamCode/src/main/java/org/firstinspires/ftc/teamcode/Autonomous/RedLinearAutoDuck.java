@@ -64,6 +64,7 @@ public class RedLinearAutoDuck extends LinearOpMode
                 robot.drivetrain.strafe(.4, 300, 0, 180, robot.gyro);
 
             } else {
+                left = false;
                 robot.scorer.autoHigh();
                 robot.drivetrain.strafe(.8, 800, 0, 90, robot.gyro);
                 robot.drivetrain.strafe(.4, 320, 0, 180, robot.gyro);
@@ -72,30 +73,16 @@ public class RedLinearAutoDuck extends LinearOpMode
             robot.scorer.autoDeposit();
 
             robot.drivetrain.strafe(.4,200,0,0,robot.gyro);
-            robot.drivetrain.strafe(.6, 2000, 0, 250, robot.gyro, 6, 0.5, 0.1);
-            robot.drivetrain.strafe(.15, 400, 0, 0, robot.gyro);
+            robot.drivetrain.strafe(.6, 2000, 0, 260, robot.gyro, 6, 0.5, 0.1);
+            robot.drivetrain.strafe(.4, 200, 0, 0, robot.gyro);
+            robot.drivetrain.strafe(.1, 200, 0, 0, robot.gyro);
             robot.duck.spin();
             robot.sleep(3);
             robot.duck.stop();
             if (left) {
-                robot.drivetrain.strafe(.5, 400, 0, 0, robot.gyro);
-                while (robot.drivetrain.blColor.updateRed() < 70) {
-                    robot.drivetrain.foreverDriveStraight(-.2, 0, robot.gyro);
-                }
-                while (robot.drivetrain.flColor.updateRed() < 70) {
-                    robot.drivetrain.foreverDriveStraight(.2, 0, robot.gyro);
-                }
-                robot.drivetrain.strafe(.2, 50, 0, 0, robot.gyro);
-
+                robot.drivetrain.strafe(.5, 700, 0, 180, robot.gyro);
             }else{
-                robot.drivetrain.strafe(.5, 400, 0, 0, robot.gyro);
-                while (robot.drivetrain.blColor.updateRed() < 70) {
-                    robot.drivetrain.foreverDriveStraight(-.2, 0, robot.gyro);
-                }
-                while (robot.drivetrain.flColor.updateRed() < 70) {
-                    robot.drivetrain.foreverDriveStraight(.2, 0, robot.gyro);
-                }
-                robot.drivetrain.strafe(.2, 50, 0, 0, robot.gyro);
+                robot.drivetrain.strafe(.5, 180, 0, 180, robot.gyro);
 
             }
         }
