@@ -88,17 +88,16 @@ public class Robot {
 
          //Loaded now, intake backwards and reverse
          intake.runIntakeBackwards();
-         drivetrain.strafe(.6,275,90,300,gyro);
+         drivetrain.strafe(.6,275,90,310,gyro);
          //Crossing White Line
          loopTimer1.reset();
          while(drivetrain.brColor.updateRed() < 80 && drivetrain.blColor.updateRed() < 80){
             drivetrain.foreverDriveStraight(-.2,90, gyro);
          }
-         drivetrain.strafe(.6,300,90,280,gyro);
+         drivetrain.strafe(.6,400,90,280,gyro);
          scorer.autoHigh();
-         drivetrain.strafe(.6,300,90,280,gyro);
          drivetrain.strafe(.6,200, 90,200, gyro);
-         drivetrain.strafe(.6,250, 10,200, gyro);
+         drivetrain.strafe(.6,350, 10,200, gyro);
          scorer.autoDeposit();
 
 

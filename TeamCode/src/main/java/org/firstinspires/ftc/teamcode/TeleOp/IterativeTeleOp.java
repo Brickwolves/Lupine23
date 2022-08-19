@@ -23,6 +23,7 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INV
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
@@ -68,6 +69,8 @@ public class IterativeTeleOp extends OpMode {
     public void init() {
         setOpMode(this);
 
+
+
         pid = new PID(proportionalWeight, integralWeight, derivativeWeight);
 
 
@@ -79,8 +82,11 @@ public class IterativeTeleOp extends OpMode {
                                                     */
 
 
+
+        robot.gyro.setDatum(IMU_DATUM);
+
         multTelemetry.addData("Status", "Initialized");
-        multTelemetry.addLine(":-)");
+        multTelemetry.addData("imu datum", IMU_DATUM);
         multTelemetry.update();
     }
 

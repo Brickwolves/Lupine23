@@ -18,6 +18,8 @@ public class IMU {
     private double startAngle;
     private double offsetAngle;
 
+    private double datum;
+
     private long previousTime = System.currentTimeMillis();
     double previousChange = 0;
 
@@ -31,6 +33,7 @@ public class IMU {
         previousAngle = null;
         deltaAngle = 0;
         offsetAngle = 0;
+        datum = 0;
 
     }
 
@@ -44,6 +47,10 @@ public class IMU {
         return Math.abs(rateOfChange);
     }
 
+    public void setDatum(double datum) {
+        this.datum = datum;
+    }
+
     public double getUnwrappedAngle(){
         // Get the current angle
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -52,6 +59,7 @@ public class IMU {
         return currentAngle;
 
     }
+
 
     public double getAngularKineticEnergy(){
         return MathUtils.pow(rateOfChange(), 2) * .5 * momentOfInertia;
@@ -75,7 +83,7 @@ public class IMU {
 
         // Update the previous angle
         previousAngle = currentAngle;
-        return currentAngle + deltaAngle + offsetAngle;
+        return currentAngle + deltaAngle + offsetAngle - datum;
     }
 
     public double getModAngle(){
