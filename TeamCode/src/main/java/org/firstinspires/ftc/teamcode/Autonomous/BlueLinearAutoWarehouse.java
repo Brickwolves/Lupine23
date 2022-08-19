@@ -19,8 +19,7 @@ import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 
 
 @Autonomous(name="Warehouse Blue", group="Autonomous Linear Opmode")
-public class BlueLinearAutoWarehouse extends LinearOpMode
-{
+public class BlueLinearAutoWarehouse extends LinearOpMode {
     Robot robot;
     Camera camera; //declare the camera
     // Declare OpMode members.
@@ -28,7 +27,7 @@ public class BlueLinearAutoWarehouse extends LinearOpMode
 
     public void initialize(){
         setOpMode(this);
-        Side.setBlue();
+        Side.setRed();
 
         camera = new Camera("webcam"); //camera starts streaming
     }
@@ -41,6 +40,7 @@ public class BlueLinearAutoWarehouse extends LinearOpMode
         initialize();
 
         multTelemetry.addLine("Waiting for start");
+        multTelemetry.addData("Duck Pos is nor", currentDuckPos);
         multTelemetry.update();
 
         robot = new Robot();
@@ -50,12 +50,28 @@ public class BlueLinearAutoWarehouse extends LinearOpMode
 
         if (opModeIsActive()){
 
-            //if the duck is on the left barcode
-            if (currentDuckPos == Dash_Vision.DuckPosition.LEFT_BARCODE){
+            if(currentDuckPos == Dash_Vision.DuckPosition.L_BARCODE){
+                robot.scorer.autoLow();
+                robot.drivetrain.strafe(.8,500,0,90, robot.gyro);
+                robot.drivetrain.strafe(.4,270,10,180, robot.gyro);
 
-            } else {
+            }else{
+                robot.scorer.autoHigh();
+                robot.drivetrain.strafe(.8,500,0,270, robot.gyro);
+                robot.drivetrain.strafe(.4,320,10,180, robot.gyro);
+
 
             }
+            robot.sleep(.5);
+            robot.scorer.autoDeposit();
+            robot.drivetrain.strafe(.8, 700, 90,0,robot.gyro);
+            robot.cycle(1);
+            robot.drivetrain.strafe(.8,500,90,0,robot.gyro);
+            robot.cycle(2);
+            robot.drivetrain.strafe(.8,500,90,0,robot.gyro);
+            robot.drivetrain.strafe(.8,1000,90,80, robot.gyro);
+            robot.drivetrain.strafe(.6,200,180,180, robot.gyro);
+
         }
     }
 }

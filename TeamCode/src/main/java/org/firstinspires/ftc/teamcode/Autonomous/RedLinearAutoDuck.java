@@ -25,6 +25,7 @@ public class RedLinearAutoDuck extends LinearOpMode
     Camera camera; //declare the camera
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+    boolean left = false;
 
     public void initialize(){
         setOpMode(this);
@@ -45,6 +46,7 @@ public class RedLinearAutoDuck extends LinearOpMode
         initialize();
 
         multTelemetry.addLine("Waiting for start");
+        multTelemetry.addData("Duck Pos is not", currentDuckPos);
         multTelemetry.update();
 
         robot = new Robot();
@@ -52,22 +54,50 @@ public class RedLinearAutoDuck extends LinearOpMode
 
         waitForStart();
 
-        if (opModeIsActive()){
+        if (opModeIsActive()) {
 
             //if the duck is on the left
-            if(currentDuckPos == Dash_Vision.DuckPosition.LEFT_BARCODE){
+            if (currentDuckPos == Dash_Vision.DuckPosition.L_BARCODE) {
+                left = true;
                 robot.scorer.autoLow();
-                robot.drivetrain.strafe(.8,400,0,90, robot.gyro);
-                robot.drivetrain.strafe(.4,300,0,180, robot.gyro);
+                robot.drivetrain.strafe(.8, 800, 0, 90, robot.gyro);
+                robot.drivetrain.strafe(.4, 300, 0, 180, robot.gyro);
 
-            }else{
+            } else {
                 robot.scorer.autoHigh();
-                robot.drivetrain.strafe(.8,400,0,90, robot.gyro);
-                robot.drivetrain.strafe(.4,320,0,180, robot.gyro);
+                robot.drivetrain.strafe(.8, 800, 0, 90, robot.gyro);
+                robot.drivetrain.strafe(.4, 320, 0, 180, robot.gyro);
             }
             robot.sleep(.5);
             robot.scorer.autoDeposit();
 
+            robot.drivetrain.strafe(.4,200,0,0,robot.gyro);
+            robot.drivetrain.strafe(.6, 2000, 0, 250, robot.gyro, 6, 0.5, 0.1);
+            robot.drivetrain.strafe(.15, 400, 0, 0, robot.gyro);
+            robot.duck.spin();
+            robot.sleep(3);
+            robot.duck.stop();
+            if (left) {
+                robot.drivetrain.strafe(.5, 400, 0, 0, robot.gyro);
+                while (robot.drivetrain.blColor.updateRed() < 70) {
+                    robot.drivetrain.foreverDriveStraight(-.2, 0, robot.gyro);
+                }
+                while (robot.drivetrain.flColor.updateRed() < 70) {
+                    robot.drivetrain.foreverDriveStraight(.2, 0, robot.gyro);
+                }
+                robot.drivetrain.strafe(.2, 50, 0, 0, robot.gyro);
+
+            }else{
+                robot.drivetrain.strafe(.5, 400, 0, 0, robot.gyro);
+                while (robot.drivetrain.blColor.updateRed() < 70) {
+                    robot.drivetrain.foreverDriveStraight(-.2, 0, robot.gyro);
+                }
+                while (robot.drivetrain.flColor.updateRed() < 70) {
+                    robot.drivetrain.foreverDriveStraight(.2, 0, robot.gyro);
+                }
+                robot.drivetrain.strafe(.2, 50, 0, 0, robot.gyro);
+
+            }
         }
     }
 }

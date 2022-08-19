@@ -8,7 +8,6 @@ import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.MIN_CB;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.MIN_CR;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.MIN_Y;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.currentDuckPos;
-import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.CAMERA_HEIGHT;
 import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.IMG_WIDTH;
 import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.IMG_HEIGHT;
@@ -132,9 +131,9 @@ public class DuckPipeline extends OpenCvPipeline {
          * sets currentDuckPos equal to whichever is true
          */
         if (duckRect.x < (IMG_WIDTH - 1) / 2){
-            currentDuckPos = Dash_Vision.DuckPosition.LEFT_BARCODE;
+            currentDuckPos = Dash_Vision.DuckPosition.R_BARCODE;
         } else if (duckRect.x > (IMG_WIDTH - 1) / 2){
-            currentDuckPos = Dash_Vision.DuckPosition.RIGHT_BARCODE;
+            currentDuckPos = Dash_Vision.DuckPosition.L_BARCODE;
         }
 
 

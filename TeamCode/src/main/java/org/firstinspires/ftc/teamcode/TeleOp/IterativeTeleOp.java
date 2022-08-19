@@ -165,7 +165,7 @@ public class IterativeTeleOp extends OpMode {
 
 
         //DUCKWHEEL CODE
-        if(controller2.get(CIRCLE, TOGGLE)){
+        if(controller2.get(CIRCLE, DOWN)){
             if(Side.red) {
                 robot.duck.spin();
             }else{
