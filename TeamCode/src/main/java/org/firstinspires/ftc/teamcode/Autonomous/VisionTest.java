@@ -45,8 +45,6 @@ public class VisionTest extends LinearOpMode
 
         if (opModeIsActive()){
 
-            robot.orientToDuck();
-            robot.intakeDuck();
 
         }
    }

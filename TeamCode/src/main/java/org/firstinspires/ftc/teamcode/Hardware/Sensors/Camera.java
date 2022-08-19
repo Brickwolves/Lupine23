@@ -39,7 +39,9 @@ public class Camera {
 
             }
         });
+
     }
+
 
 
 }

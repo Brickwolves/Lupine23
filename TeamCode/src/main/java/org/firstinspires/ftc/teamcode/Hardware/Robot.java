@@ -9,6 +9,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.IMU;
 
 /**
@@ -22,6 +23,7 @@ public class Robot {
    public IMU gyro;
    public DuckSpinner duck;
    public Scoring scorer;
+
    public ElapsedTime loopTimer1 = new ElapsedTime();
    private ElapsedTime sleepTime = new ElapsedTime();
 
@@ -41,7 +43,6 @@ public class Robot {
       drivetrain = new Mecanum();
       duck = new DuckSpinner("duck");
       scorer = new Scoring();
-      //camera = new Camera("webcam");
 
       gyro = new IMU("imu");
 
