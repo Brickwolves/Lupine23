@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.currentDuckPos;
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
@@ -85,6 +86,8 @@ public class RedLinearAutoDuck extends LinearOpMode
                 robot.drivetrain.strafe(.5, 180, 0, 180, robot.gyro);
 
             }
+
+            IMU_DATUM = robot.gyro.getAngle();
         }
     }
 }

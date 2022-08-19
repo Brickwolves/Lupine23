@@ -103,6 +103,50 @@ public class Robot {
 
 
 
+      }else{
+         loopTimer1.reset();
+
+         //drive forward a bit
+         drivetrain.strafe(.7,600,270,80,gyro);
+
+
+
+         //while bucket isn't loaded
+         while(!scorer.isLoaded()) {
+            loopTimer1.reset();
+            intake.updateEncoders();
+            intake.runIntake();
+            //if bucket isn't loaded and it hasn't been three seconds drive forward with intake on -ADD INTAKE JAM MAYBE
+            while (!scorer.isLoaded() && loopTimer1.seconds() < 3) {
+               drivetrain.foreverDriveStraight(.3, 90, gyro);
+
+            }
+            //if any of these conditions happen check if it's the bucket one, if it is break loop
+            if(scorer.isLoaded()){
+               break;
+            }
+            //if it wasn't loaded then backup
+            intake.runIntakeBackwards();
+            drivetrain.strafe(.7,300,270,90,gyro);
+            //and start over
+            multTelemetry.addData("isLoaded", scorer.isLoaded());
+            multTelemetry.addData("intake Jammed", intake.jammed());
+            multTelemetry.update();
+         }
+
+         //Loaded now, intake backwards and reverse
+         intake.runIntakeBackwards();
+         drivetrain.strafe(.6,275,270,50,gyro);
+         //Crossing White Line
+         loopTimer1.reset();
+         while(drivetrain.brColor.updateRed() < 80 && drivetrain.blColor.updateRed() < 80){
+            drivetrain.foreverDriveStraight(-.2,270, gyro);
+         }
+         drivetrain.strafe(.6,400,270,80,gyro);
+         scorer.autoHigh();
+         drivetrain.strafe(.6,160, 270,160, gyro);
+         drivetrain.strafe(.6,350, 350,160, gyro);
+         scorer.autoDeposit();
       }
    }
 
