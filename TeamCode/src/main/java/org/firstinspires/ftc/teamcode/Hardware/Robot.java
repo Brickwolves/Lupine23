@@ -102,12 +102,12 @@ public class Robot {
 
 
 
-
+//BLUE
       }else{
          loopTimer1.reset();
 
          //drive forward a bit
-         drivetrain.strafe(.7,600,270,80,gyro);
+         drivetrain.strafe(.7,600,270,280,gyro);
 
 
 
@@ -118,9 +118,10 @@ public class Robot {
             intake.runIntake();
             //if bucket isn't loaded and it hasn't been three seconds drive forward with intake on -ADD INTAKE JAM MAYBE
             while (!scorer.isLoaded() && loopTimer1.seconds() < 3) {
-               drivetrain.foreverDriveStraight(.3, 90, gyro);
+               drivetrain.setAllPower(.3);
 
             }
+            drivetrain.setAllPower(0);
             //if any of these conditions happen check if it's the bucket one, if it is break loop
             if(scorer.isLoaded()){
                break;

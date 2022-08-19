@@ -211,8 +211,13 @@ public class Mecanum {
     }
 
 
-    public void foreverDriveStraight(double power, double targetAngle, IMU gyro){
-        setDrivePower(power,0, rotationalPID.update(gyro.getAngle() - targetAngle, false), 1);
+    public void foreverDriveStraight(double power, double targetAngle, IMU gyro) {
+        setDrivePower(power, 0, rotationalPID.update(gyro.getAngle() - targetAngle, false), 1);
+        multTelemetry.addData("angle", gyro.getAngle());
+        multTelemetry.addData("target", targetAngle);
+        multTelemetry.addData("angle - target", gyro.getAngle() - targetAngle);
+        multTelemetry.update();
+
     }
 
 

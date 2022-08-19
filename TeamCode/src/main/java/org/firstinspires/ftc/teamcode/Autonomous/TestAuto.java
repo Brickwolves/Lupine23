@@ -19,8 +19,8 @@ import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
 import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 
 
-@Autonomous(name="Warehouse Blue", group="Autonomous Linear Opmode")
-public class BlueLinearAutoWarehouse extends LinearOpMode {
+@Autonomous(name="Test Auto", group="Autonomous Linear Opmode")
+public class TestAuto extends LinearOpMode {
     Robot robot;
     Camera camera; //declare the camera
     // Declare OpMode members.
@@ -51,27 +51,10 @@ public class BlueLinearAutoWarehouse extends LinearOpMode {
 
         if (opModeIsActive()){
 
-            if(currentDuckPos == Dash_Vision.DuckPosition.L_BARCODE){
-                robot.scorer.autoLow();
-                robot.drivetrain.strafe(.8,700,0,90, robot.gyro);
-                robot.drivetrain.strafe(.4,200,350,180, robot.gyro);
-
-            }else{
-                robot.scorer.autoHigh();
-                robot.drivetrain.strafe(.8,900,0,90, robot.gyro);
-                robot.drivetrain.strafe(.4,250,350,180, robot.gyro);
+            robot.drivetrain.foreverDriveStraight(.3,90, robot.gyro);
+            robot.drivetrain.foreverDriveStraight(.3,90, robot.gyro);
 
 
-            }
-            robot.sleep(.5);
-            robot.scorer.autoDeposit();
-            robot.drivetrain.strafe(.8, 900, 270,0,robot.gyro);
-            robot.cycle(1);
-            robot.drivetrain.strafe(.8,650,270,0,robot.gyro);
-            robot.cycle(2);
-            robot.drivetrain.strafe(.8,650,270,0,robot.gyro);
-            robot.drivetrain.strafe(.8,700,270,260, robot.gyro);
-            IMU_DATUM = robot.gyro.getAngle();
         }
     }
 }
