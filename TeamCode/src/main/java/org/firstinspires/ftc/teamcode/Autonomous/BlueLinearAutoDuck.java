@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 public class BlueLinearAutoDuck extends LinearOpMode
 {
     Robot robot;
-    //Camera camera; //declare the camera
+    Camera camera; //declare the camera
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     boolean left = false;
@@ -32,7 +32,7 @@ public class BlueLinearAutoDuck extends LinearOpMode
         setOpMode(this);
         Side.setBlue();
 
-        //camera = new Camera("webcam"); //camera starts streaming
+        camera = new Camera("webcam"); //camera starts streaming
 
         multTelemetry.addData("duck position", currentDuckPos);
         multTelemetry.update();
@@ -58,18 +58,18 @@ public class BlueLinearAutoDuck extends LinearOpMode
         if (opModeIsActive()) {
 
             //if the duck is on the left
-//            if (currentDuckPos == Dash_Vision.DuckPosition.L_BARCODE) {
-//                left = true;
-//                robot.scorer.autoLow();
-//                robot.drivetrain.strafe(.8, 500, 0, 270, robot.gyro);
-//                robot.drivetrain.strafe(.4, 250, 0, 180, robot.gyro);
-//
-//            } else {
+            if (currentDuckPos == Dash_Vision.DuckPosition.L_BARCODE) {
+                left = true;
+                robot.scorer.autoLow();
+                robot.drivetrain.strafe(.8, 500, 0, 270, robot.gyro);
+                robot.drivetrain.strafe(.4, 250, 0, 180, robot.gyro);
+
+            } else {
                 left = false;
                 robot.scorer.autoHigh();
                 robot.drivetrain.strafe(.8, 500, 0, 270, robot.gyro);
                 robot.drivetrain.strafe(.4, 300, 0, 180, robot.gyro);
-           // }
+            }
             robot.sleep(.5);
             robot.scorer.autoDeposit();
 

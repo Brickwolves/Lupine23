@@ -8,6 +8,7 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.TAP;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.TOGGLE;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.CIRCLE;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.CROSS;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_DN;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_L;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_R;
@@ -140,6 +141,10 @@ public class IterativeTeleOp extends OpMode {
         else if (currentRateOfChange <= rateOfChange) pid_on = true;
 
 
+        //IMU RESET
+        if(controller.get(CROSS, TAP)){
+            robot.gyro.reset();
+        }
 
         //TURN WRAPPING
         if (controller.get(DPAD_R, TAP)) {

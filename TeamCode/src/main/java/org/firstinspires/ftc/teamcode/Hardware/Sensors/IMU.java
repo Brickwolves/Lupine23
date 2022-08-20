@@ -37,6 +37,10 @@ public class IMU {
 
     }
 
+    public void reset(){
+        datum = getAngle();
+    }
+
     public double rateOfChange(){
         double change = getAngle();
         double deltaTime = (System.currentTimeMillis() - previousTime) / 1000.0;
