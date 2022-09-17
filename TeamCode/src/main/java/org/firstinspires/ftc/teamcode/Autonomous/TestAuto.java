@@ -19,8 +19,8 @@ import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
 import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 
 
-@Autonomous(name="Warehouse Red", group="Autonomous Linear Opmode")
-public class RedLinearAutoWarehouse extends LinearOpMode {
+@Autonomous(name="Test Auto", group="Autonomous Linear Opmode")
+public class TestAuto extends LinearOpMode {
     Robot robot;
     Camera camera; //declare the camera
     // Declare OpMode members.
@@ -28,7 +28,7 @@ public class RedLinearAutoWarehouse extends LinearOpMode {
 
     public void initialize(){
         setOpMode(this);
-        Side.setRed();
+        Side.setBlue();
 
         camera = new Camera("webcam"); //camera starts streaming
     }
@@ -41,7 +41,7 @@ public class RedLinearAutoWarehouse extends LinearOpMode {
         initialize();
 
         multTelemetry.addLine("Waiting for start");
-        multTelemetry.addData("Duck Pos is not", currentDuckPos);
+        multTelemetry.addData("Duck Pos", currentDuckPos);
         multTelemetry.update();
 
         robot = new Robot();
@@ -51,27 +51,10 @@ public class RedLinearAutoWarehouse extends LinearOpMode {
 
         if (opModeIsActive()){
 
-            if(currentDuckPos == Dash_Vision.DuckPosition.L_BARCODE){
-                robot.scorer.autoLow();
-                robot.drivetrain.strafe(.8,500,0,270, robot.gyro);
-                robot.drivetrain.strafe(.4,300,10,180, robot.gyro);
-
-            }else{
-                robot.scorer.autoHigh();
-                robot.drivetrain.strafe(.8,500,0,270, robot.gyro);
-                robot.drivetrain.strafe(.4,320,10,180, robot.gyro);
+            robot.drivetrain.foreverDriveStraight(.3,90, robot.gyro);
+            robot.drivetrain.foreverDriveStraight(.3,90, robot.gyro);
 
 
-            }
-            robot.sleep(.5);
-            robot.scorer.autoDeposit();
-            robot.drivetrain.strafe(.8, 700, 90,0,robot.gyro);
-            robot.cycle(1);
-            robot.drivetrain.strafe(.8,650,90,0,robot.gyro);
-            robot.cycle(2);
-            robot.drivetrain.strafe(.8,650,90,0,robot.gyro);
-            robot.drivetrain.strafe(.8,500,90,80, robot.gyro);
-            IMU_DATUM = robot.gyro.getAngle();
         }
     }
 }

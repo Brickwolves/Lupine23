@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.Hardware.Sensors;
 
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.momentOfInertia;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.OpModeUtils;
 
 public class IMU {
@@ -14,6 +17,8 @@ public class IMU {
     private double deltaAngle;
     private double startAngle;
     private double offsetAngle;
+
+    private double datum;
 
     private long previousTime = System.currentTimeMillis();
     double previousChange = 0;
@@ -28,7 +33,12 @@ public class IMU {
         previousAngle = null;
         deltaAngle = 0;
         offsetAngle = 0;
+        datum = 0;
 
+    }
+
+    public void reset(){
+        datum = getAngle();
     }
 
     public double rateOfChange(){
@@ -41,6 +51,10 @@ public class IMU {
         return Math.abs(rateOfChange);
     }
 
+    public void setDatum(double datum) {
+        this.datum = datum;
+    }
+
     public double getUnwrappedAngle(){
         // Get the current angle
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -48,6 +62,15 @@ public class IMU {
 
         return currentAngle;
 
+    }
+
+
+    public double getAngularKineticEnergy(){
+        return MathUtils.pow(rateOfChange(), 2) * .5 * momentOfInertia;
+    }
+
+    public double absAngularDist(double compareAngle){
+        return Math.abs(compareAngle - getAngle());
     }
 
     /**
@@ -64,7 +87,7 @@ public class IMU {
 
         // Update the previous angle
         previousAngle = currentAngle;
-        return currentAngle + deltaAngle + offsetAngle;
+        return currentAngle + deltaAngle + offsetAngle - datum;
     }
 
     public double getModAngle(){

@@ -4,9 +4,7 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIG
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.intakeD;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.intakeI;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.intakeP;
+
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -23,17 +21,25 @@ public class Intake {
     DcMotor intakeMotor;
     private long previousTime = System.currentTimeMillis();
     double previousChange = 0;
+    double updateIteration = 19;
+
+
 
 
     public Intake(){
         intakeMotor = hardwareMap.get(DcMotor.class, "intake");
         intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        intakePID = new PID(intakeP, intakeI, intakeD);
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        intakePID = new PID(0.002, 0, 0);
 
     }
 
+    double mostRecentAngle;
+    double currentAngle;
+    public boolean isMoving;
+
     public void runIntake(){
-        intakeMotor.setPower(0.8);
+        intakeMotor.setPower(1);
     }
 
     public void runIntakeBackwards(){
@@ -59,6 +65,23 @@ public class Intake {
         previousTime = System.currentTimeMillis();
         previousChange = change;
         return rateOfChange;
+    }
+
+    public void updateEncoders(){
+        updateIteration ++;
+        if(updateIteration == 20){
+            updateIteration = 0;
+            currentAngle = intakeMotor.getCurrentPosition();
+            isMoving = Math.abs(mostRecentAngle - currentAngle) > 2;
+            mostRecentAngle = currentAngle;
+        }
+    }
+    public boolean jammed(){
+        if(!isMoving && intakeMotor.getPower() != 0){
+            return(true);
+        }else{
+            return(false);
+        }
     }
 
 

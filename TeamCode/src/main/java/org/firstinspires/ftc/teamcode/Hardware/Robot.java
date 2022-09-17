@@ -1,16 +1,15 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
-import com.qualcomm.robotcore.hardware.CRServo;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_AutoDistances.angle1;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_AutoDistances.angle2;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_AutoDistances.dist1;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_AutoDistances.dist2;
+import static org.firstinspires.ftc.teamcode.Utilities.Loggers.Side.red;
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
+
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.DEGREE_RANGE;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.FRONT_CAMERA_OFFSET;
-import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.isActive;
-import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
-import static org.firstinspires.ftc.teamcode.Vision.DuckPipelineLR.isDuckFound;
-
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
-import org.firstinspires.ftc.teamcode.Hardware.Sensors.Cameras;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.IMU;
 
 /**
@@ -20,13 +19,15 @@ public class Robot {
 
    public Intake intake;
    public Mecanum drivetrain;
-   public OdoWheels odoWheels;
+   //public OdoWheels odoWheels;
    public IMU gyro;
    public DuckSpinner duck;
    public Scoring scorer;
-   public Cameras cameras;
-   public Camera camera;
-   public Robot(){
+
+   public ElapsedTime loopTimer1 = new ElapsedTime();
+   private ElapsedTime sleepTime = new ElapsedTime();
+
+   public Robot() {
       initRobot();
    }
 
@@ -36,99 +37,125 @@ public class Robot {
             I N I T   M O T O R S
        */
 
-      //initialized Mecanu
+      //initialized Mecanum
+      //odoWheels = new OdoWheels();
       intake = new Intake();
       drivetrain = new Mecanum();
       duck = new DuckSpinner("duck");
       scorer = new Scoring();
-      cameras = new Cameras();
 
-      gyro = new IMU( "imu");
+      gyro = new IMU("imu");
 
 
       multTelemetry.addData("Status", "Initialized");
       multTelemetry.update();
    }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-   //find duck, turn to duck, lock onto duck
-   public void orientToDuck(){ //NOTE: this method is only for front cam
-      ElapsedTime timer = new ElapsedTime();
-      timer.reset(); //timer is 0
-      double theta = gyro.getAngle(); //robot's current angle BEFORE the loop begins
-      boolean reachedAng1 = false;
-      boolean reachedAng2 = false;
-      double angle1 = theta + DEGREE_RANGE; // can modify thru dashboard
-      double angle2 = theta - DEGREE_RANGE;
-      double degreeMOE = 3;
-      double timeout = 3;
+   public void cycle(int cycleNo) {
 
-      while (isActive() && timer.seconds() < timeout){
-         if (isDuckFound){ //if the camera sees the duck
-            timeout = 3;
-            //setPoint = target angle
-            double setPoint = FRONT_CAMERA_OFFSET + cameras.fcam.front_pipeline.degreeError2Duck() + gyro.getAngle();
-            //calculates the difference between robot's current angle and target angle
-            //finds how much farther robot has to turn
-            double correction = drivetrain.rotationalPID.update(gyro.getAngle() - setPoint, true);
-            // turns the robot so that degreeError2Duck = 0 (robot is exactly on target)
-            drivetrain.setDrivePower(0, 0, correction, 0.8);
+//RED
 
-            multTelemetry.addData("SetPoint", setPoint);
-            multTelemetry.addData("Correction", correction);
-            multTelemetry.addData("isDuckFound", isDuckFound);
+      if (red) {
+         loopTimer1.reset();
 
-         } else { //if the camera does not see the duck
-            double currentAngle = gyro.getAngle(); //robot's current angle (constantly resetting after each setDrivePower is supplied)
-            if (!reachedAng1){ // if the robot has not reached angle 1 yet
-               drivetrain.setDrivePower(0, 0, 0.3, -1);
-               timeout = 5;
+         //drive forward a bit
+         drivetrain.strafe(.7,600,90,80,gyro);
+
+
+
+         //while bucket isn't loaded
+         while(!scorer.isLoaded()) {
+            loopTimer1.reset();
+            intake.updateEncoders();
+            intake.runIntake();
+            //if bucket isn't loaded and it hasn't been three seconds drive forward with intake on -ADD INTAKE JAM MAYBE
+            while (!scorer.isLoaded() && loopTimer1.seconds() < 3) {
+               drivetrain.foreverDriveStraight(.3, 90, gyro);
+
             }
-
-            if (currentAngle < (angle1 + degreeMOE) && currentAngle > (angle1 - degreeMOE)){ //if the robot has reached (around) angle 1 and still no duck
-               reachedAng1 = true;
-               timeout = 9;
+            //if any of these conditions happen check if it's the bucket one, if it is break loop
+            if(scorer.isLoaded()){
+               break;
             }
-
-            if (reachedAng1 && !reachedAng2){ //if the robot has reached angle 1 but not angle 2 and still no duck
-               drivetrain.setDrivePower(0, 0, 0.3, 1); //spin opposite direction
-            }
-
-            if (currentAngle > (angle2 - degreeMOE) && currentAngle < (angle2 + degreeMOE)){ // if the robot has reached (around) angle 2 and still no duck
-               reachedAng2 = true;
-            }
-
-            if (reachedAng1 && reachedAng2){ // if the robot has reached both angle 1 and angle 2 and still no duck
-               drivetrain.setDrivePower(0, 0, 0.3, 1); //start spinning in a circle
-            }
+            //if it wasn't loaded then backup
+            intake.runIntakeBackwards();
+            drivetrain.strafe(.7,300,90,270,gyro);
+            //and start over
+            multTelemetry.addData("isLoaded", scorer.isLoaded());
+            multTelemetry.addData("intake Jammed", intake.jammed());
+            multTelemetry.update();
          }
+
+         //Loaded now, intake backwards and reverse
+         intake.runIntakeBackwards();
+         drivetrain.strafe(.6,275,90,310,gyro);
+         //Crossing White Line
+         loopTimer1.reset();
+         while(drivetrain.brColor.updateRed() < 80 && drivetrain.blColor.updateRed() < 80){
+            drivetrain.foreverDriveStraight(-.2,90, gyro);
+         }
+         drivetrain.strafe(.6,500,90,280,gyro);
+         scorer.autoHigh();
+         drivetrain.strafe(.6,200, 90,200, gyro);
+         drivetrain.strafe(.6,350, 10,200, gyro);
+         scorer.autoDeposit();
+
+
+
+//BLUE
+      }else{
+         loopTimer1.reset();
+
+         //drive forward a bit
+         drivetrain.strafe(.7,600,270,280,gyro);
+
+
+
+         //while bucket isn't loaded
+         while(!scorer.isLoaded()) {
+            loopTimer1.reset();
+            intake.updateEncoders();
+            intake.runIntake();
+            //if bucket isn't loaded and it hasn't been three seconds drive forward with intake on -ADD INTAKE JAM MAYBE
+            while (!scorer.isLoaded() && loopTimer1.seconds() < 3) {
+               drivetrain.setAllPower(.3);
+
+            }
+            drivetrain.setAllPower(0);
+            //if any of these conditions happen check if it's the bucket one, if it is break loop
+            if(scorer.isLoaded()){
+               break;
+            }
+            //if it wasn't loaded then backup
+            intake.runIntakeBackwards();
+            drivetrain.strafe(.7,300,270,90,gyro);
+            //and start over
+            multTelemetry.addData("isLoaded", scorer.isLoaded());
+            multTelemetry.addData("intake Jammed", intake.jammed());
+            multTelemetry.update();
+         }
+
+         //Loaded now, intake backwards and reverse
+         intake.runIntakeBackwards();
+         drivetrain.strafe(.6,275,270,50,gyro);
+         //Crossing White Line
+         loopTimer1.reset();
+         while(drivetrain.brColor.updateRed() < 80 && drivetrain.blColor.updateRed() < 80){
+            drivetrain.foreverDriveStraight(-.2,270, gyro);
+         }
+         drivetrain.strafe(.6,400,270,80,gyro);
+         scorer.autoHigh();
+         drivetrain.strafe(.6,160, 270,160, gyro);
+         drivetrain.strafe(.6,350, 350,160, gyro);
+         scorer.autoDeposit();
       }
-      drivetrain.setDrivePower(0, 0, 0, 0); //stop moving, we didn't find the duckie :(
    }
 
-   //essentially an extension of orientToDuck
-   //a method that prompts the robot to drive to and intake the duck
-   //this method is also just for fcam
-   public void intakeDuck(){
-      double distance2Duck2 = cameras.fcam.front_pipeline.getDistanceToDuck2();
-      ElapsedTime timer = new ElapsedTime();
-      timer.reset();
-      while (isDuckFound && timer.seconds() < 3){
-         intake.runIntake();
-         drivetrain.strafe(distance2Duck2 * 41.5, 0.1, 0.1, 0.5, gyro, true); //drives to duck
+   public void sleep(double seconds){
+      sleepTime.reset();
+      while (sleepTime.seconds() <  seconds){
+
       }
-   }
-
-
-
-   public void cycle(int number){
 
    }
-
-=======
->>>>>>> parent of 5047ddb (Everything works, PID not tuned, no autos)
-=======
->>>>>>> parent of 5047ddb (Everything works, PID not tuned, no autos)
-
 }

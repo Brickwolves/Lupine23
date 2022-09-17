@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.DashConstants;
 import com.acmerobotics.dashboard.config.Config;
 
-import org.opencv.core.Scalar;
-
 @Config
 public class Dash_Vision {
 
@@ -30,10 +28,10 @@ public class Dash_Vision {
     public static double DEGREE_RANGE = 100;
 
 
-    public static DuckPosition currentDuckPos = DuckPosition.LEFT_BARCODE;
+    public static DuckPosition currentDuckPos = DuckPosition.R_BARCODE;
 
     public enum DuckPosition{
-        LEFT_BARCODE, RIGHT_BARCODE
+        R_BARCODE, L_BARCODE
     }
 
     public enum CamBeingUsed{

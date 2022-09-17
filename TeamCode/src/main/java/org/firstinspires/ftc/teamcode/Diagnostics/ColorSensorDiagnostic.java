@@ -6,11 +6,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Controls.Controller;
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.Color_Sensor;
 import org.firstinspires.ftc.teamcode.Utilities.OpModeUtils;
 import org.firstinspires.ftc.teamcode.Controls.ButtonControls;
 
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_DN;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_UP;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_ColorSensorDiagnostic.colorSensorID;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_ServoDiagnostic.SERVO_HOME;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_ServoDiagnostic.SERVO_ID;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_ServoDiagnostic.SERVO_MAX;
@@ -18,15 +20,16 @@ import static org.firstinspires.ftc.teamcode.DashConstants.Dash_ServoDiagnostic.
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.DOWN;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TOUCHPAD;
 
+import android.graphics.Color;
 
-@TeleOp(name = "ServoDiagnostic TeleOp", group="Linear TeleOp")
-public class ServoDiagnostic extends LinearOpMode {
+
+@TeleOp(name = "ColorSensorDiagnostic TeleOp", group="Linear TeleOp")
+public class ColorSensorDiagnostic extends LinearOpMode {
 
     private Controller controller;
 
-    private Servo servo;
-    private String servo_id = SERVO_ID;
-    private String status = "HOME";
+    private Color_Sensor colorSensor;
+    private String sensor_id = colorSensorID;
 
 
     public void initialize() {
@@ -34,9 +37,8 @@ public class ServoDiagnostic extends LinearOpMode {
         controller = new Controller(gamepad1);
 
 
-        servo = OpModeUtils.hardwareMap.get(Servo.class, servo_id);
-        servo.setDirection(Servo.Direction.FORWARD);
-        servo.setPosition(SERVO_HOME);
+        colorSensor = new Color_Sensor();
+        colorSensor.init(sensor_id);
 
         OpModeUtils.multTelemetry.addData("Status", "Initialized");
         OpModeUtils.multTelemetry.addData("Start Keys", "Press [>] to begin");
@@ -47,8 +49,6 @@ public class ServoDiagnostic extends LinearOpMode {
     public void shutdown(){
         OpModeUtils.multTelemetry.addData("Status", "Shutting Down");
         OpModeUtils.multTelemetry.update();
-        servo.setPosition(SERVO_HOME);
-        sleep(3000);
     }
 
 
@@ -62,18 +62,10 @@ public class ServoDiagnostic extends LinearOpMode {
         while (opModeIsActive()) {
             Controller.update();
 
-            if (controller.get(DPAD_UP, DOWN)) {
-                servo.setPosition(SERVO_MAX);
-                status = "MAX";
-            }
-            if (controller.get(DPAD_DN, DOWN)) {
-                servo.setPosition(SERVO_MIN);
-                status = "MIN";
-            }
-
-            OpModeUtils.multTelemetry.addData("Servo ID", servo_id);
-            OpModeUtils.multTelemetry.addData("Servo Status", status);
-            OpModeUtils.multTelemetry.addData("Servo Position", servo.getPosition());
+            OpModeUtils.multTelemetry.addData("Red", colorSensor.updateRed());
+            OpModeUtils.multTelemetry.addData("Green", colorSensor.updateGreen());
+            OpModeUtils.multTelemetry.addData("Blue", colorSensor.updateBlue());
+            OpModeUtils.multTelemetry.addData("Alpha", colorSensor.colorSensor.alpha());
             OpModeUtils.multTelemetry.update();
 
 
