@@ -40,7 +40,6 @@ public class Mecanum {
     DcMotor bl;
     DcMotor br;
     PID rotationalPID;
-    public Color_Sensor flColor, blColor, frColor, brColor;
 
 
 
@@ -62,17 +61,7 @@ public class Mecanum {
 
         rotationalPID = new PID(proportionalWeight, integralWeight , derivativeWeight);
 
-        flColor = new Color_Sensor();
-        flColor.init("flColor");
 
-        blColor = new Color_Sensor();
-        blColor.init("blColor");
-
-        frColor = new Color_Sensor();
-        frColor.init("frColor");
-
-        brColor = new Color_Sensor();
-        brColor.init("brColor");
 
 
 

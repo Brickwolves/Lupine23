@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.DashConstants;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-public class DuckPos {
-    //Left is low goal
-    public static boolean left = true;
+public class Dash_ColorSensorDiagnostic {
+    public static String colorSensorID = "color";
 }

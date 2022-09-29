@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Hardware.Sensors;
 
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.momentOfInertia;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 
@@ -64,10 +63,6 @@ public class IMU {
 
     }
 
-
-    public double getAngularKineticEnergy(){
-        return MathUtils.pow(rateOfChange(), 2) * .5 * momentOfInertia;
-    }
 
     public double absAngularDist(double compareAngle){
         return Math.abs(compareAngle - getAngle());

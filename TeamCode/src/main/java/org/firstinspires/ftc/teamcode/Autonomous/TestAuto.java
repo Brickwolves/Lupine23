@@ -9,20 +9,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.currentDuckPos;
-import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
-import org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
-import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
 import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 
 
 @Autonomous(name="Test Auto", group="Autonomous Linear Opmode")
 public class TestAuto extends LinearOpMode {
     Robot robot;
-    Camera camera; //declare the camera
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -30,7 +26,6 @@ public class TestAuto extends LinearOpMode {
         setOpMode(this);
         Side.setBlue();
 
-        camera = new Camera("webcam"); //camera starts streaming
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

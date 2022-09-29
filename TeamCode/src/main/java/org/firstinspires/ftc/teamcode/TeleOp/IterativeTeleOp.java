@@ -51,7 +51,9 @@ public class IterativeTeleOp extends OpMode {
     private boolean pid_on_last_cycle = false;
     private boolean KETurns = false;
 
-    public enum SlidesState {HIGH, MIDDLE, LOW, SHARED, DOWN}
+
+    public enum SlidesState {HIGH, MIDDLE, LOW, GROUND, DOWN, DEPOSIT}
+
 
     public SlidesState slidesState = SlidesState.DOWN;
 
@@ -131,6 +133,67 @@ public class IterativeTeleOp extends OpMode {
 
         double power;
 
+        //Scoring
+        if(controller2.get(DPAD_UP, TAP) && slidesState != SlidesState.HIGH){
+            slidesState = SlidesState.HIGH;
+            robot.grabber.time.reset();
+        }
+
+        if(controller2.get(DPAD_L, TAP) && slidesState != SlidesState.MIDDLE){
+            slidesState = SlidesState.MIDDLE;
+            robot.grabber.time.reset();
+        }
+
+        if(controller2.get(DPAD_R, TAP) && slidesState != SlidesState.LOW){
+            slidesState = SlidesState.LOW;
+            robot.grabber.time.reset();
+        }
+
+        if(controller2.get(DPAD_DN, TAP) && slidesState != SlidesState.GROUND){
+            slidesState = SlidesState.GROUND;
+            robot.grabber.time.reset();
+        }
+
+        if(controller2.get(CIRCLE,TAP) && slidesState != SlidesState.DEPOSIT){
+            robot.grabber.wentDown = false;
+            slidesState = SlidesState.DEPOSIT;
+            robot.grabber.time.reset();
+        }
+
+        if(controller2.get(SQUARE, TAP) && slidesState != SlidesState.DOWN){
+            slidesState = SlidesState.DOWN;
+            robot.grabber.time.reset();
+        }
+
+        if(controller.get(RB2, DOWN)){
+            slidesState = SlidesState.DOWN;
+            robot.grabber.intake();
+        }else if (controller.get(RB1, DOWN)){
+            robot.grabber.runIntakeBackwards();
+        }else{
+            robot.grabber.stopIntake();
+        }
+
+        switch(slidesState){
+            case HIGH:
+                robot.grabber.high();
+                break;
+            case MIDDLE:
+                robot.grabber.middle();
+                break;
+            case LOW:
+                robot.grabber.low();
+                break;
+            case GROUND:
+                robot.grabber.ground();
+                break;
+            case DEPOSIT:
+                robot.grabber.deposit();
+                break;
+            case DOWN:
+                robot.grabber.down();
+        }
+
         //PID and Kinetic Turning
         double rotation = controller.get(RIGHT, X);
 
@@ -176,116 +239,19 @@ public class IterativeTeleOp extends OpMode {
         pid_on_last_cycle = pid_on;
 
 
-
-
-        //DUCKWHEEL CODE
-        if(controller2.get(CIRCLE, DOWN)){
-            if(Side.red) {
-                robot.duck.spin();
-            }else{
-                robot.duck.backspin();
-            }
-        }else{
-            robot.duck.stop();
-        }
-
-        //INTAKE CODE and close lip
-        if(robot.scorer.isLoaded()) {
-            if(!controller.get(RB2, DOWN)) {
-                robot.intake.runIntakeBackwards();
-            }else{
-                robot.intake.runIntake();
-            }
-            robot.scorer.lip.setPosition(0.28);
-        }else {
-            if(slidesState == SlidesState.DOWN){
-                robot.scorer.lip.setPosition(.1);
-            }
-            if (controller.get(RB2, ButtonControls.ButtonState.DOWN)) {
-                robot.intake.runIntake();
-            } else if (controller.get(RB1, ButtonControls.ButtonState.DOWN)) {
-                robot.intake.runIntakeBackwards();
-            } else {
-                robot.intake.stopIntake(false);
-            }
-        }
-
-
-
-        //DEPOSITOR CODE
-        if(controller2.get(DPAD_UP, TAP) && slidesState != SlidesState.HIGH){
-            slidesState = SlidesState.HIGH;
-            robot.scorer.time.reset();
-        }
-
-        if(controller2.get(DPAD_L, TAP) && slidesState != SlidesState.MIDDLE){
-            slidesState = SlidesState.MIDDLE;
-            robot.scorer.time.reset();
-        }
-
-        if(controller2.get(DPAD_R, TAP) && slidesState != SlidesState.LOW){
-            slidesState = SlidesState.LOW;
-            robot.scorer.time.reset();
-        }
-
-        if(controller2.get(DPAD_DN, TAP) && slidesState != SlidesState.SHARED){
-            slidesState = SlidesState.SHARED;
-            robot.scorer.time.reset();
-            robot.intake.stopIntake(false);
-        }
-
-        if(controller2.get(SQUARE, TAP) && slidesState != SlidesState.DOWN){
-            slidesState = SlidesState.DOWN;
-            robot.scorer.time.reset();
-        }
-
-        switch(slidesState){
-            case HIGH:
-                robot.scorer.scoreHigh();
-                robot.intake.runIntakeBackwards();
-                break;
-            case MIDDLE:
-                robot.scorer.scoreMid();
-                robot.intake.runIntakeBackwards();
-                break;
-            case LOW:
-                robot.scorer.scoreLow();
-                robot.intake.stopIntake(false);
-                break;
-            case SHARED:
-                robot.scorer.scoreShared();
-                robot.intake.stopIntake(false);
-                break;
-            case DOWN:
-                robot.scorer.deposit();
-                break;
-            }
-
-        //ODOMETRY WHEELS CONTROL
-
-//        if (controller.get(TRIANGLE, DOWN)){
-//            robot.odoWheels.raiseWheels();
-//        }
-        //RUMBLE
-        if(slidesState == SlidesState.DOWN) {
-            if(robot.scorer.isLoaded()){
-                controller.rumble(1000);
-                controller2.rumble(1000);
-            }
-
-        }
-
         //DRIVING
         controller.setJoystickShift(LEFT, robot.gyro.getAngle());
 
         double drive = controller.get(LEFT, INVERT_SHIFTED_Y);
         double strafe = controller.get(LEFT, SHIFTED_X);
+        double turn = controller.get(RIGHT, X);
 
         if(controller.get(LB1, ButtonControls.ButtonState.DOWN) || controller.get(LB2, DOWN)){
-            power = 0.3;
-        }else{
+            power = 0.3;}else{
             power = 0.8;
         }
+
+
 
         robot.drivetrain.setDrivePower(drive, strafe, rotation, power);
 
@@ -295,7 +261,8 @@ public class IterativeTeleOp extends OpMode {
     /*
          ----------- L O G G I N G -----------
                                             */
-        multTelemetry.addData("isLoaded", robot.scorer.isLoaded());
+        multTelemetry.addData("Target", robot.grabber.spool.getTargetPosition());
+        multTelemetry.addData("Current", robot.grabber.spool.getCurrentPosition());
         multTelemetry.update();
     }
 
