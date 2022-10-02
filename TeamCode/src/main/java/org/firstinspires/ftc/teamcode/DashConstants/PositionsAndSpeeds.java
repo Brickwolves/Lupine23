@@ -14,4 +14,6 @@ public class PositionsAndSpeeds {
 
     public static double rateOfChange = 300;
 
+    public static int brakeDownPos = 50;
+
 }
