@@ -13,11 +13,15 @@ import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeig
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
 
+import com.arcrobotics.ftclib.command.OdometrySubsystem;
+import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.wolfpackmachina.bettersensors.Sensors.Gyro;
 
+import org.firstinspires.ftc.teamcode.DashConstants.Dash_Odometry;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.Color_Sensor;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.IMU;
 import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
@@ -242,11 +246,34 @@ public class Mecanum {
 
     }
 
+    //Odometry code, Don't call this, instead call the Waypoint constructor
+    public void HolonomicOdometry(){
+        // define our constants
+        final double TRACKWIDTH = Dash_Odometry.TRACKWIDTH;
+        final double TICKS_TO_INCHES = Dash_Odometry.TICKS_TO_INCHES;
+        final double CENTER_WHEEL_OFFSET = Dash_Odometry.CENTER_WHEEL_OFFSET;
 
+        // create our encoders
+        MotorEx encoderLeft, encoderRight, encoderPerp;
+        encoderLeft = new MotorEx(hardwareMap, "left_encoder");
+        encoderRight = new MotorEx(hardwareMap, "right_encoder");
+        encoderPerp = new MotorEx(hardwareMap, "center_encoder");
 
+        encoderLeft.setDistancePerPulse(TICKS_TO_INCHES);
+        encoderRight.setDistancePerPulse(TICKS_TO_INCHES);
+        encoderPerp.setDistancePerPulse(TICKS_TO_INCHES);
 
+        // create the odometry object
+        HolonomicOdometry holOdom = new HolonomicOdometry(
+                encoderLeft::getDistance,
+                encoderRight::getDistance,
+                encoderPerp::getDistance,
+                TRACKWIDTH, CENTER_WHEEL_OFFSET
+        );
 
-
+        // create the odometry subsystem
+        OdometrySubsystem odometry = new OdometrySubsystem(holOdom);
+    }
 
 
 }
