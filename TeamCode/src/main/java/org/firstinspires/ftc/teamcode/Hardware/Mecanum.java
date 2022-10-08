@@ -43,6 +43,9 @@ public class Mecanum {
     DcMotor fr;
     DcMotor bl;
     DcMotor br;
+    public MotorEx encoderLeft;
+    public MotorEx encoderRight;
+    public MotorEx encoderPerp;
     PID rotationalPID;
 
 
@@ -62,6 +65,10 @@ public class Mecanum {
 
         br = hardwareMap.get(DcMotor.class, "br");
         br.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        encoderLeft = new MotorEx(hardwareMap, "left_encoder");
+        encoderRight = new MotorEx(hardwareMap, "right_encoder");
+        encoderPerp = new MotorEx(hardwareMap, "center_encoder");
 
         rotationalPID = new PID(proportionalWeight, integralWeight , derivativeWeight);
 
@@ -247,17 +254,11 @@ public class Mecanum {
     }
 
     //Odometry code, Don't call this, instead call the Waypoint constructor
-    public void HolonomicOdometry(){
+    public void holonomicOdometry(){
         // define our constants
         final double TRACKWIDTH = Dash_Odometry.TRACKWIDTH;
         final double TICKS_TO_INCHES = Dash_Odometry.TICKS_TO_INCHES;
         final double CENTER_WHEEL_OFFSET = Dash_Odometry.CENTER_WHEEL_OFFSET;
-
-        // create our encoders
-        MotorEx encoderLeft, encoderRight, encoderPerp;
-        encoderLeft = new MotorEx(hardwareMap, "left_encoder");
-        encoderRight = new MotorEx(hardwareMap, "right_encoder");
-        encoderPerp = new MotorEx(hardwareMap, "center_encoder");
 
         encoderLeft.setDistancePerPulse(TICKS_TO_INCHES);
         encoderRight.setDistancePerPulse(TICKS_TO_INCHES);
