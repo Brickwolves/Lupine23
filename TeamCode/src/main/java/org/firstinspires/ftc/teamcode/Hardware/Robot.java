@@ -15,6 +15,7 @@ public class Robot {
    public IMU gyro;
    public Grabber grabber;
 
+
    public Robot() {
       initRobot();
    }
@@ -30,5 +31,7 @@ public class Robot {
       multTelemetry.addData("Status", "Initialized");
       multTelemetry.update();
    }
+
+
 
 }

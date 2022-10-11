@@ -106,4 +106,12 @@ public class MathUtils {
     public static double convertTicks2Inches(double inches){
         return (0.0207 * inches) + 4.38; // Calculated using desmos
     }
+
+    public static Point odoToTiles(Point odoInput){
+        return odoInput;
+    }
+
+    public static Point tilesToOdo(Point tilesInput){
+        return tilesInput;
+    }
 }
