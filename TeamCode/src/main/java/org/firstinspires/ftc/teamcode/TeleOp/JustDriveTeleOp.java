@@ -43,7 +43,6 @@ public class JustDriveTeleOp extends OpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private PID pid;
     private double setPoint = 0;
-    private boolean wasTurning;
     private boolean pid_on = false;
     private boolean pid_on_last_cycle = false;
     private boolean KETurns = false;

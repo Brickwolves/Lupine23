@@ -12,7 +12,8 @@ public class PositionsAndSpeeds {
 
     public static double intakeSpeed = .5;
 
-    public static double rateOfChange = 300;
+    public static double rateOfChange = 120;
 
-
+    public static double coneBlue = 100;
+    public static double coneRed = 100;
 }

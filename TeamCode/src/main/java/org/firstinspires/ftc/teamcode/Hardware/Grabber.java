@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.coneBlue;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.coneRed;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.depositDrop;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.groundJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highJunction;
@@ -13,6 +15,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.Color_Sensor;
+import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
+
 public class Grabber {
 
 
@@ -20,6 +25,7 @@ public class Grabber {
     public CRServo grab2;
     public DcMotor spool;
     public Servo squeezer;
+    public Color_Sensor grabColor;
 
     public boolean wentDown = false;
 
@@ -36,6 +42,9 @@ public class Grabber {
         squeezer = hardwareMap.get(Servo.class, "squeeze");
         squeezer.setPosition(0);
 
+        grabColor = new Color_Sensor();
+        grabColor.init("grabColor");
+
         spool = hardwareMap.get(DcMotor.class, "spool");
         spool.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         spool.setTargetPosition(80);
@@ -47,10 +56,23 @@ public class Grabber {
 
     }
 
+    public boolean isLoaded(){
+        if(Side.red) {
+            return grabColor.updateRed() > coneRed;
+        }else{
+            return grabColor.updateBlue() > coneBlue;
+        }
+    }
+
     public void intake(){
         squeezer.setPosition(.1);
-        grab1.setPower(-intakeSpeed);
-        grab2.setPower(intakeSpeed);
+
+        if(!isLoaded()) {
+            grab1.setPower(-intakeSpeed);
+            grab2.setPower(intakeSpeed);
+        }else{
+            stopIntake();
+        }
     }
 
     public void stopIntake(){

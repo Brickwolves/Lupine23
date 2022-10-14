@@ -35,7 +35,6 @@ import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWe
 
 import org.firstinspires.ftc.teamcode.Controls.ButtonControls;
 import org.firstinspires.ftc.teamcode.Controls.Controller;
-import org.firstinspires.ftc.teamcode.Controls.Joystick;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
