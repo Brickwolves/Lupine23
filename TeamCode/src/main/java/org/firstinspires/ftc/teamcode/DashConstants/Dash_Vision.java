@@ -3,39 +3,40 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class Dash_Vision {
-
-    public static double FRONT_MAX_Y = 255; //hardcoded YCrCb values from dashboard
-    public static double FRONT_MAX_CR = 170;
-    public static double FRONT_MAX_CB = 65;
-
-    public static double BACK_MAX_Y = 255;
-    public static double BACK_MAX_CR = 170;
-    public static double BACK_MAX_CB = 65;
-
-    public static double FRONT_MIN_Y = 0.0;
-    public static double FRONT_MIN_CR = 135;
-    public static double FRONT_MIN_CB = 0.0;
-
-    public static double BACK_MIN_Y = 0.0;
-    public static double BACK_MIN_CR = 135;
-    public static double BACK_MIN_CB = 0.0;
+    //hardcoded from dashboard
 
     public static boolean DEBUG_MODE = false;
 
-    public static double FRONT_CAMERA_OFFSET = 0;
-    public static double BACK_CAMERA_OFFSET = 0;
+    //for GREEN on signal sleeve
+    public static double GREEN_MAX_H = 0;
+    public static double GREEN_MAX_S = 0;
+    public static double GREEN_MAX_V = 0;
+    public static double GREEN_MIN_H = 0;
+    public static double GREEN_MIN_S = 0;
+    public static double GREEN_MIN_V = 0;
+
+    //for ORANGE on signal sleeve
+    public static double ORANGE_MAX_H = 0;
+    public static double ORANGE_MAX_S = 0;
+    public static double ORANGE_MAX_V = 0;
+    public static double ORANGE_MIN_H = 0;
+    public static double ORANGE_MIN_S = 0;
+    public static double ORANGE_MIN_V = 0;
+
+    //for PURPLE on signal sleeve
+    public static double PURPLE_MAX_H = 0;
+    public static double PURPLE_MAX_S = 0;
+    public static double PURPLE_MAX_V = 0;
+    public static double PURPLE_MIN_H = 0;
+    public static double PURPLE_MIN_S = 0;
+    public static double PURPLE_MIN_V = 0;
+
+    //public static CAMERA_OFFSET = 0;
 
     public static double DEGREE_RANGE = 100;
 
-
-    public static DuckPosition currentDuckPos = DuckPosition.R_BARCODE;
-
-    public enum DuckPosition{
-        R_BARCODE, L_BARCODE
-    }
-
     public enum CamBeingUsed{
-        BCAM, FCAM
+        SIGCAM, JUNKCAM
     }
 
 
