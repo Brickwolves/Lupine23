@@ -15,6 +15,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWe
 
 import com.arcrobotics.ftclib.command.OdometrySubsystem;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.arcrobotics.ftclib.kinematics.DifferentialOdometry;
 import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -47,6 +48,8 @@ public class Mecanum {
     public MotorEx encoderRight;
     public MotorEx encoderPerp;
     PID rotationalPID;
+    IMU gyro;
+
 
 
 
@@ -68,9 +71,9 @@ public class Mecanum {
 
         encoderLeft = new MotorEx(hardwareMap, "left_encoder");
         encoderRight = new MotorEx(hardwareMap, "right_encoder");
-        encoderPerp = new MotorEx(hardwareMap, "center_encoder");
 
         rotationalPID = new PID(proportionalWeight, integralWeight , derivativeWeight);
+        gyro = new IMU("imu");
 
 
 
@@ -254,34 +257,31 @@ public class Mecanum {
     }
 
     //Odometry code, Don't call this, instead call the Waypoint constructor
-    // define our trackwidth
-    public void
-    static final double TRACKWIDTH = 13.7;
 
-    // convert ticks to inches
-    static final double TICKS_TO_INCHES = 15.3;
+    public void Odometry() {
+        // define our constants
+        final double TRACKWIDTH = Dash_Odometry.TRACKWIDTH;
+        final double TICKS_TO_INCHES = Dash_Odometry.TICKS_TO_INCHES;
+        final double CENTER_WHEEL_OFFSET = Dash_Odometry.CENTER_WHEEL_OFFSET;
 
-    // create our encoders
-    MotorEx encoderLeft, encoderRight;
-    encoderLeft = new MotorEx(hardwareMap, "left_encoder");
-    encoderRight = new MotorEx(hardwareMap, "right_encoder");
+// create our encoders
+        encoderLeft = new MotorEx(hardwareMap, "left_encoder");
+        encoderRight = new MotorEx(hardwareMap, "right_encoder");
+        encoderPerp = new MotorEx(hardwareMap, "center_encoder");
 
-    // create our odometry
-    DifferentialOdometry diffOdom = new DifferentialOdometry(
-            () -> encoderLeft.getCurrentPosition() * TICKS_TO_INCHES,
-            () -> encoderRight.getCurrentPosition() * TICKS_TO_INCHES,
-            TRACKWIDTH
-    );
+        encoderLeft.setDistancePerPulse(TICKS_TO_INCHES);
+        encoderRight.setDistancePerPulse(TICKS_TO_INCHES);
+        encoderPerp.setDistancePerPulse(TICKS_TO_INCHES);
 
-// update the initial position
-diffOdom.updatePose(new Pose2d(1, 2, 0));
+// create the odometry object
+        HolonomicOdometry holOdom = new HolonomicOdometry(
+                encoderLeft::getDistance,
+                encoderRight::getDistance,
+                encoderPerp::getDistance,
+                TRACKWIDTH, CENTER_WHEEL_OFFSET
+        );
 
-// control loop
-while (!isStopRequested()) {
-        /* implementation */
-
-        // update the position
-        diffOdom.updatePose();
+// create the odometry subsystem
+        OdometrySubsystem odometry = new OdometrySubsystem(holOdom);
     }
-
 }
