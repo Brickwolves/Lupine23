@@ -11,18 +11,14 @@ import java.lang.reflect.GenericArrayType;
  */
 public class Robot {
 
-   public Mecanum drivetrain;
    public IMU gyro;
-   public Grabber grabber;
+
 
    public Robot() {
       initRobot();
    }
 
    public void initRobot() {
-
-      drivetrain = new Mecanum();
-      grabber = new Grabber();
 
       gyro = new IMU("imu");
 

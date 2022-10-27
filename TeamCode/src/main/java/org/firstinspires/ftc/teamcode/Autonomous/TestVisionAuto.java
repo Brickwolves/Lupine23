@@ -48,7 +48,6 @@ public class TestVisionAuto extends LinearOpMode {
 
         if (opModeIsActive()){
 
-
         }
     }
 }

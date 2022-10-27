@@ -1,28 +1,28 @@
 package org.firstinspires.ftc.teamcode.VisionPipelines;
 
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.DEBUG_MODE;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_H;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_S;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_V;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_H;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_S;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_V;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_H;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_S;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_V;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_H;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_S;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_V;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PURPLE_MAX_H;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PURPLE_MAX_S;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PURPLE_MAX_V;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PURPLE_MIN_H;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PURPLE_MIN_S;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PURPLE_MIN_V;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_CB;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_CR;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_Y;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_CB;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_CR;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_Y;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_CB;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_CR;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_Y;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_CB;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_CR;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_Y;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_CB;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_CR;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_Y;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_CB;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_CR;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_Y;
 import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.sortRectsByMaxOption;
 import static org.opencv.core.Core.inRange;
 import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
-import static org.opencv.imgproc.Imgproc.COLOR_RGB2HSV;
+import static org.opencv.imgproc.Imgproc.COLOR_RGB2YCrCb;
 import static org.opencv.imgproc.Imgproc.RETR_TREE;
 import static org.opencv.imgproc.Imgproc.boundingRect;
 import static org.opencv.imgproc.Imgproc.cvtColor;
@@ -56,10 +56,10 @@ public class SignalPipeline extends OpenCvPipeline {
     boolean isSignalFound = false;
     boolean greenFound = false;
     boolean orangeFound = false;
-    boolean purpleFound = false;
+    boolean pinkFound = false;
 
     public enum SignalSide {
-        oneGreen, twoOrange, threePurple
+        oneGreen, twoOrange, threePink
     }
 
 
@@ -75,26 +75,26 @@ public class SignalPipeline extends OpenCvPipeline {
         IMG_WIDTH = input.cols() / 2;
 
         input.copyTo(output);
-        cvtColor(input, modified, COLOR_RGB2HSV); //convert to HSV color space
+        cvtColor(input, modified, COLOR_RGB2YCrCb); //convert to YCrCb color space
 
 
         /**
          * THRESHOLDING
          */
         //THRESHOLD FOR GREEN
-        Scalar GREEN_MAX_THRESH = new Scalar(GREEN_MAX_H, GREEN_MAX_S, GREEN_MAX_V);
-        Scalar GREEN_MIN_THRESH = new Scalar(GREEN_MIN_H, GREEN_MIN_S, GREEN_MIN_V);
+        Scalar GREEN_MAX_THRESH = new Scalar(GREEN_MAX_Y, GREEN_MAX_CR, GREEN_MAX_CB);
+        Scalar GREEN_MIN_THRESH = new Scalar(GREEN_MIN_Y, GREEN_MIN_CR, GREEN_MIN_CB);
         inRange(modified, GREEN_MIN_THRESH, GREEN_MAX_THRESH, modified); //threshold image for green
 
         //THRESHOLD FOR ORANGE
-        Scalar ORANGE_MAX_THRESH = new Scalar(ORANGE_MAX_H, ORANGE_MAX_S, ORANGE_MAX_V);
-        Scalar ORANGE_MIN_THRESH = new Scalar(ORANGE_MIN_H, ORANGE_MIN_S, ORANGE_MIN_V);
+        Scalar ORANGE_MAX_THRESH = new Scalar(ORANGE_MAX_Y, ORANGE_MAX_CR, ORANGE_MAX_CB);
+        Scalar ORANGE_MIN_THRESH = new Scalar(ORANGE_MIN_Y, ORANGE_MIN_CR, ORANGE_MIN_CB);
         inRange(modified, ORANGE_MIN_THRESH, ORANGE_MAX_THRESH, modified);
 
-        //THRESHOLD FOR PURPLE
-        Scalar PURPLE_MAX_THRESH = new Scalar(PURPLE_MAX_H, PURPLE_MAX_S, PURPLE_MAX_V);
-        Scalar PURPLE_MIN_THRESH = new Scalar(PURPLE_MIN_H, PURPLE_MIN_S, PURPLE_MIN_V);
-        inRange(modified, PURPLE_MIN_THRESH, PURPLE_MAX_THRESH, modified);
+        //THRESHOLD FOR PINK
+        Scalar PINK_MAX_THRESH = new Scalar(PINK_MAX_Y, PINK_MAX_CR, PINK_MAX_CB);
+        Scalar PINK_MIN_THRESH = new Scalar(PINK_MIN_Y, PINK_MIN_CR, PINK_MIN_CB);
+        inRange(modified, PINK_MIN_THRESH, PINK_MAX_THRESH, modified);
 
 
         /**
@@ -133,14 +133,14 @@ public class SignalPipeline extends OpenCvPipeline {
          * for threePurple
          * finding contours
          */
-        List<Rect> purpleRects = new ArrayList<>();
+        List<Rect> pinkRects = new ArrayList<>();
         for (int i = 0; i < contours.size(); i++){
-            Rect purpleRect = boundingRect(contours.get(i));
-            purpleRects.add(purpleRect);
+            Rect pinkRect = boundingRect(contours.get(i));
+            pinkRects.add(pinkRect);
         }
 
 
-        if (greenRects.size() < 1 && orangeRects.size() < 1 && purpleRects.size() < 1){ //if camera has found NO contours
+        if (greenRects.size() < 1 && orangeRects.size() < 1 && pinkRects.size() < 1){ //if camera has found NO contours
             isSignalFound = false; //if the camera does not see the signal at all, the code will not run
             if (DEBUG_MODE){
                 return modified;
@@ -154,7 +154,7 @@ public class SignalPipeline extends OpenCvPipeline {
         /**
          * DRAWING THE RECTANGLE
          */
-        if (greenRects.size() > 0 && orangeRects.size() < 1 && purpleRects.size() < 1){ //if camera only sees green
+        if (greenRects.size() > 0 && orangeRects.size() < 1 && pinkRects.size() < 1){ //if camera only sees green
             /*
              looks for the biggest rectangle in the frame
              sorts by area
@@ -167,7 +167,7 @@ public class SignalPipeline extends OpenCvPipeline {
             greenFound = true;
         }
 
-        if (orangeRects.size() > 0 && greenRects.size() < 1 && purpleRects.size() < 1){ //if camera only sees orange
+        if (orangeRects.size() > 0 && greenRects.size() < 1 && pinkRects.size() < 1){ //if camera only sees orange
             List<Rect> biggestRect = sortRectsByMaxOption(1, VisionUtils.RECT_OPTION.AREA, orangeRects);
             Rect signalRect = biggestRect.get(0);
             rectangle(output, signalRect, red, 3); //draws a rectangle around the contour
@@ -176,16 +176,16 @@ public class SignalPipeline extends OpenCvPipeline {
             orangeFound = true;
         }
 
-        if (purpleRects.size() > 0 && greenRects.size() < 1 && orangeRects.size() < 1){ //if camera only sees purple
-            List<Rect> biggestRect = sortRectsByMaxOption(1, VisionUtils.RECT_OPTION.AREA, purpleRects);
+        if (pinkRects.size() > 0 && greenRects.size() < 1 && orangeRects.size() < 1){ //if camera only sees pink
+            List<Rect> biggestRect = sortRectsByMaxOption(1, VisionUtils.RECT_OPTION.AREA, pinkRects);
             Rect signalRect = biggestRect.get(0);
             rectangle(output, signalRect, red, 3); //draws a rectangle around the contour
 
-            SignalSide signalSide = SignalSide.threePurple; //signal side is three/purple!
-            purpleFound = true;
+            SignalSide signalSide = SignalSide.threePink; //signal side is three/purple!
+            pinkFound = true;
         }
 
-        
+
 
 
         if (DEBUG_MODE){
@@ -205,7 +205,7 @@ public class SignalPipeline extends OpenCvPipeline {
 
         }
 
-        if (purpleFound){
+        if (pinkFound){
 
         }
     }
