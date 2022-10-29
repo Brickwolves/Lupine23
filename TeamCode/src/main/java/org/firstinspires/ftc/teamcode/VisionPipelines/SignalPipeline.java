@@ -1,24 +1,24 @@
 package org.firstinspires.ftc.teamcode.VisionPipelines;
 
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.DEBUG_MODE;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_B;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_G;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_R;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_B;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_G;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_R;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_B;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_G;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_R;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_B;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_G;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_R;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_B;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_G;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_R;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_B;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_G;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_R;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_CB;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_CR;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_Y;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_CB;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_CR;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_Y;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_CB;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_CR;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_Y;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_CB;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_CR;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_Y;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_CB;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_CR;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_Y;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_CB;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_CR;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_Y;
 import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.sortRectsByMaxOption;
 import static org.opencv.core.Core.inRange;
 import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
@@ -29,11 +29,13 @@ import static org.opencv.imgproc.Imgproc.cvtColor;
 import static org.opencv.imgproc.Imgproc.findContours;
 import static org.opencv.imgproc.Imgproc.rectangle;
 
+import org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision;
 import org.firstinspires.ftc.teamcode.Utilities.VisionUtils;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
@@ -44,74 +46,111 @@ public class SignalPipeline extends OpenCvPipeline {
 //to be used for auto only
 //loosely copied from WM23 ColorPicker and LupineBTI DuckPipelineDetect
 
-    private Mat output = new Mat();
-    private Mat modified = new Mat();
-    private List<MatOfPoint> contours = new ArrayList<>(); //create empty arraylist to store contour points
+    private ArrayList<MatOfPoint> greenContours, orangeContours, pinkContours; //empty contour lists to store contour points
     private Mat hierarchy = new Mat();
     private Scalar red = new Scalar(255, 0, 0); //this pipeline outlines in RED
+    public Mat output = new Mat(),
+            modified = new Mat(),
+            green = new Mat(), //separate matrices for each signal color
+            orange = new Mat(),
+            pink = new Mat(),
+            debugging = new Mat();
 
     private static int IMG_HEIGHT = 0;
     private static int IMG_WIDTH = 0;
 
     boolean isSignalFound = false;
-    boolean greenFound = false;
-    boolean orangeFound = false;
-    boolean pinkFound = false;
 
-    public enum SignalSide {
-        oneGreen, twoOrange, threePink
-    }
+    public Dash_Vision.SignalSide signalSide;
 
 
-    /**
-     * what I want to do:
-     * search for the signal sleeve
-     * if oneGreen is detected, signalSide = oneGreen, etc. - detect by hsv value
-     **/
 
     @Override
     public Mat processFrame(Mat input) {
+
+        //copy input to output (obviously)
+        input.copyTo(output);
+
+        //height & width
         IMG_HEIGHT = input.rows() / 2;
         IMG_WIDTH = input.cols() / 2;
 
-        input.copyTo(modified);
-        input.copyTo(output);
-        //cvtColor(input, modified, COLOR_RGB2); //convert to YCrCb color space
+        //convert to YCrCb
+        cvtColor(input, modified, Imgproc.COLOR_RGB2YCrCb);
 
 
-        /**
-         * THRESHOLDING
-         */
-        //THRESHOLD FOR GREEN
-        Scalar GREEN_MAX_THRESH = new Scalar(GREEN_MAX_R, GREEN_MAX_G, GREEN_MAX_B);
-        Scalar GREEN_MIN_THRESH = new Scalar(GREEN_MIN_R, GREEN_MIN_G, GREEN_MIN_B);
-        inRange(modified, GREEN_MIN_THRESH, GREEN_MAX_THRESH, modified); //threshold image for green
-
-        //THRESHOLD FOR ORANGE
-        Scalar ORANGE_MAX_THRESH = new Scalar(ORANGE_MAX_R, ORANGE_MAX_G, ORANGE_MAX_B);
-        Scalar ORANGE_MIN_THRESH = new Scalar(ORANGE_MIN_R, ORANGE_MIN_G, ORANGE_MIN_B);
-        inRange(modified, ORANGE_MIN_THRESH, ORANGE_MAX_THRESH, modified);
-
-        //THRESHOLD FOR PINK
-        Scalar PINK_MAX_THRESH = new Scalar(PINK_MAX_R, PINK_MAX_G, PINK_MAX_B);
-        Scalar PINK_MIN_THRESH = new Scalar(PINK_MIN_R, PINK_MIN_G, PINK_MIN_B);
-        inRange(modified, PINK_MIN_THRESH, PINK_MAX_THRESH, modified);
+        //Retrieving green, orange, or pink rect
+        Rect greenRect = getGreen(modified);
+        Rect orangeRect = getOrange(modified);
+        Rect pinkRect = getPink(modified);
 
 
-        /**
-         * FINDING CONTOURS
-         */
-        contours = new ArrayList<>();
-        hierarchy = new Mat();
-        findContours(modified, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //populates contours and hierarchy lists
+        if (DEBUG_MODE){
+            if (greenRect != null){
+                rectangle(output, greenRect, red);
+            }
 
-        /*
-         * for oneGreen
-         * finding contours
-         */
+            if (orangeRect != null){
+                rectangle(output, orangeRect, red);
+            }
+
+            if (pinkRect != null){
+                rectangle(output, pinkRect, red);
+            }
+        }
+
+        //if there was an error checking for any of the rects
+        if (greenRect == null || orangeRect == null || pinkRect == null){
+            return debugging;
+        }
+
+
+
+        //draw rects!
+        rectangle(output, greenRect, red);
+        rectangle(output, orangeRect, red);
+        rectangle(output, pinkRect, red);
+
+
+        //analysis of position - which color is the signal sleeve and where should we park?
+        if (greenRect != null && orangeRect == null && pinkRect == null){
+            //if green
+            signalSide = Dash_Vision.SignalSide.oneGreen;
+        }
+        if (orangeRect != null && greenRect == null && pinkRect == null){
+            //if orange
+            signalSide = Dash_Vision.SignalSide.twoOrange;
+        }
+        if (pinkRect != null && greenRect == null && orangeRect == null){
+            //if pink
+            signalSide = Dash_Vision.SignalSide.threePink;
+        }
+
+
+
+        return output;
+    }
+
+    /**
+     * LOOKING FOR GREEN
+     * @param input
+     * @return
+     */
+    private Rect getGreen(Mat input){
+
+        //thresholding
+        Scalar GREEN_MAX_THRESH = new Scalar(GREEN_MAX_Y, GREEN_MAX_CR, GREEN_MAX_CB);
+        Scalar GREEN_MIN_THRESH = new Scalar(GREEN_MIN_Y, GREEN_MIN_CR, GREEN_MIN_CB);
+        inRange(modified, GREEN_MIN_THRESH, GREEN_MAX_THRESH, modified);
+
+        //finding contour
+        greenContours = new ArrayList<>();
+        findContours(green, greenContours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
+
+        //finding rect(s)
         List<Rect> greenRects = new ArrayList<>();
-        for (int i = 0; i < contours.size(); i++){
-            Rect greenRect = boundingRect(contours.get(i));
+        for (int i = 0; i < greenContours.size(); i++){
+            Rect greenRect = boundingRect(greenContours.get(i));
             greenRects.add(greenRect);
             /*
              iterates thru each index in the contour arraylist
@@ -120,80 +159,83 @@ public class SignalPipeline extends OpenCvPipeline {
             */
         }
 
-        /*
-         * for twoOrange
-         * finding contours
-         */
-        List<Rect> orangeRects = new ArrayList<>();
-        for (int i = 0; i < contours.size(); i++){
-            Rect orangeRect = boundingRect(contours.get(i));
-            orangeRects.add(orangeRect);
+        //exception for if no green is found
+        if (greenRects.size() < 1){
+            isSignalFound = false;
+            return null;
         }
 
-        /*
-         * for threePink
-         * finding contours
-         */
-        List<Rect> pinkRects = new ArrayList<>();
-        for (int i = 0; i < contours.size(); i++){
-            Rect pinkRect = boundingRect(contours.get(i));
-            pinkRects.add(pinkRect);
-        }
+        //finding largest rect - this is the one we want!
+        return sortRectsByMaxOption(1, VisionUtils.RECT_OPTION.AREA, greenRects).get(0);
 
-
-        if (greenRects.size() < 1 && orangeRects.size() < 1 && pinkRects.size() < 1){ //if camera has found NO contours
-            isSignalFound = false; //if the camera does not see the signal at all, the code will not run
-            if (DEBUG_MODE){
-                return modified;
-            }
-            return output;
-        }
-
-        isSignalFound = true; //if we have found at least one contour, the signal has been found
-
-
-        /**
-         * DRAWING THE RECTANGLE
-         */
-        if (greenRects.size() > 0 && orangeRects.size() < 1 && pinkRects.size() < 1){ //if camera only sees green
-            /*
-             looks for the biggest rectangle in the frame
-             sorts by area
-             */
-            List<Rect> biggestRect = sortRectsByMaxOption(1, VisionUtils.RECT_OPTION.AREA, greenRects);
-            Rect signalRect = biggestRect.get(0);
-            rectangle(output, signalRect, red, 3); //draws a rectangle around the contour
-
-            SignalSide signalSide = SignalSide.oneGreen; //signal side is one/green!
-            greenFound = true;
-        }
-
-        if (orangeRects.size() > 0 && greenRects.size() < 1 && pinkRects.size() < 1){ //if camera only sees orange
-            List<Rect> biggestRect = sortRectsByMaxOption(1, VisionUtils.RECT_OPTION.AREA, orangeRects);
-            Rect signalRect = biggestRect.get(0);
-            rectangle(output, signalRect, red, 3); //draws a rectangle around the contour
-
-            SignalSide signalSide = SignalSide.twoOrange; //signal side is two/orange!
-            orangeFound = true;
-        }
-
-        if (pinkRects.size() > 0 && greenRects.size() < 1 && orangeRects.size() < 1){ //if camera only sees pink
-            List<Rect> biggestRect = sortRectsByMaxOption(1, VisionUtils.RECT_OPTION.AREA, pinkRects);
-            Rect signalRect = biggestRect.get(0);
-            rectangle(output, signalRect, red, 3); //draws a rectangle around the contour
-
-            SignalSide signalSide = SignalSide.threePink; //signal side is three/purple!
-            pinkFound = true;
-        }
-
-
-
-
-        if (DEBUG_MODE){
-            return modified;
-        }
-        return output;
     }
 
 
+    /**
+     * LOOKING FOR ORANGE
+     * @param input
+     * @return
+     */
+    private Rect getOrange(Mat input){
+
+        //thresholding
+        Scalar ORANGE_MAX_THRESH = new Scalar(ORANGE_MAX_Y, ORANGE_MAX_CR, ORANGE_MAX_CB);
+        Scalar ORANGE_MIN_THRESH = new Scalar(ORANGE_MIN_Y, ORANGE_MIN_CR, ORANGE_MIN_CB);
+        inRange(modified, ORANGE_MIN_THRESH, ORANGE_MAX_THRESH, modified);
+
+        //finding contour
+        orangeContours = new ArrayList<>();
+        findContours(orange, orangeContours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
+
+        //finding rect(s)
+        List<Rect> orangeRects = new ArrayList<>();
+        for (int i = 0; i < orangeContours.size(); i++){
+            Rect orangeRect = boundingRect(orangeContours.get(i));
+            orangeRects.add(orangeRect);
+        }
+
+        //exception for if no orange found
+        if (orangeRects.size() < 1){
+            isSignalFound = false;
+            return null;
+        }
+
+        //finding largest rect
+        return sortRectsByMaxOption(1, VisionUtils.RECT_OPTION.AREA, orangeRects).get(0);
+    }
+
+
+    /**
+     * LOOKING FOR PINK
+     * @param input
+     * @return
+     */
+    private Rect getPink(Mat input){
+
+        //thresholding
+        Scalar PINK_MAX_THRESH = new Scalar(PINK_MAX_Y, PINK_MAX_CR, PINK_MAX_CB);
+        Scalar PINK_MIN_THRESH = new Scalar(PINK_MIN_Y, PINK_MIN_CR, PINK_MIN_CB);
+        inRange(modified, PINK_MIN_THRESH, PINK_MAX_THRESH, modified);
+
+        //finding contour
+        pinkContours = new ArrayList<>();
+        findContours(pink, pinkContours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
+
+        //finding rect(s)
+        List<Rect> pinkRects = new ArrayList<>();
+        for (int i = 0; i < pinkContours.size(); i++){
+            Rect pinkRect = boundingRect(pinkContours.get(i));
+            pinkRects.add(pinkRect);
+        }
+
+        //exception for if no pink is found
+        if (pinkRects.size() < 1){
+            isSignalFound = false;
+            return null;
+        }
+
+        //finding largest rect
+        return sortRectsByMaxOption(1, VisionUtils.RECT_OPTION.AREA, pinkRects).get(0);
+
+    }
 }
