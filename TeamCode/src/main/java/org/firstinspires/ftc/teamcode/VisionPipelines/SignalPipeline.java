@@ -1,24 +1,24 @@
 package org.firstinspires.ftc.teamcode.VisionPipelines;
 
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.DEBUG_MODE;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_CB;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_CR;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_Y;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_CB;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_CR;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_Y;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_CB;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_CR;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_Y;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_CB;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_CR;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_Y;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_CB;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_CR;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_Y;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_CB;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_CR;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_Y;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_B;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_G;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_R;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_B;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_G;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_R;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_B;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_G;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_R;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_B;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_G;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_R;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_B;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_G;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_R;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_B;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_G;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_R;
 import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.sortRectsByMaxOption;
 import static org.opencv.core.Core.inRange;
 import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
@@ -74,26 +74,27 @@ public class SignalPipeline extends OpenCvPipeline {
         IMG_HEIGHT = input.rows() / 2;
         IMG_WIDTH = input.cols() / 2;
 
+        input.copyTo(modified);
         input.copyTo(output);
-        cvtColor(input, modified, COLOR_RGB2YCrCb); //convert to YCrCb color space
+        //cvtColor(input, modified, COLOR_RGB2); //convert to YCrCb color space
 
 
         /**
          * THRESHOLDING
          */
         //THRESHOLD FOR GREEN
-        Scalar GREEN_MAX_THRESH = new Scalar(GREEN_MAX_Y, GREEN_MAX_CR, GREEN_MAX_CB);
-        Scalar GREEN_MIN_THRESH = new Scalar(GREEN_MIN_Y, GREEN_MIN_CR, GREEN_MIN_CB);
+        Scalar GREEN_MAX_THRESH = new Scalar(GREEN_MAX_R, GREEN_MAX_G, GREEN_MAX_B);
+        Scalar GREEN_MIN_THRESH = new Scalar(GREEN_MIN_R, GREEN_MIN_G, GREEN_MIN_B);
         inRange(modified, GREEN_MIN_THRESH, GREEN_MAX_THRESH, modified); //threshold image for green
 
         //THRESHOLD FOR ORANGE
-        Scalar ORANGE_MAX_THRESH = new Scalar(ORANGE_MAX_Y, ORANGE_MAX_CR, ORANGE_MAX_CB);
-        Scalar ORANGE_MIN_THRESH = new Scalar(ORANGE_MIN_Y, ORANGE_MIN_CR, ORANGE_MIN_CB);
+        Scalar ORANGE_MAX_THRESH = new Scalar(ORANGE_MAX_R, ORANGE_MAX_G, ORANGE_MAX_B);
+        Scalar ORANGE_MIN_THRESH = new Scalar(ORANGE_MIN_R, ORANGE_MIN_G, ORANGE_MIN_B);
         inRange(modified, ORANGE_MIN_THRESH, ORANGE_MAX_THRESH, modified);
 
         //THRESHOLD FOR PINK
-        Scalar PINK_MAX_THRESH = new Scalar(PINK_MAX_Y, PINK_MAX_CR, PINK_MAX_CB);
-        Scalar PINK_MIN_THRESH = new Scalar(PINK_MIN_Y, PINK_MIN_CR, PINK_MIN_CB);
+        Scalar PINK_MAX_THRESH = new Scalar(PINK_MAX_R, PINK_MAX_G, PINK_MAX_B);
+        Scalar PINK_MIN_THRESH = new Scalar(PINK_MIN_R, PINK_MIN_G, PINK_MIN_B);
         inRange(modified, PINK_MIN_THRESH, PINK_MAX_THRESH, modified);
 
 
@@ -130,7 +131,7 @@ public class SignalPipeline extends OpenCvPipeline {
         }
 
         /*
-         * for threePurple
+         * for threePink
          * finding contours
          */
         List<Rect> pinkRects = new ArrayList<>();
@@ -194,20 +195,5 @@ public class SignalPipeline extends OpenCvPipeline {
         return output;
     }
 
-
-    public void park(){
-    //robot will drive to corresponding parking spot based on the signal sleeve
-        if (greenFound){
-
-        }
-
-        if (orangeFound){
-
-        }
-
-        if (pinkFound){
-
-        }
-    }
 
 }
