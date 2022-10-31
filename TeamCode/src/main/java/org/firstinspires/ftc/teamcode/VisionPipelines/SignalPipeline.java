@@ -31,6 +31,7 @@ import static org.opencv.imgproc.Imgproc.rectangle;
 
 import org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision;
 import org.firstinspires.ftc.teamcode.Utilities.VisionUtils;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
@@ -68,15 +69,15 @@ public class SignalPipeline extends OpenCvPipeline {
     @Override
     public Mat processFrame(Mat input) {
 
-        //copy input to output (obviously)
+        //convert to YCrCb
+        Imgproc.cvtColor(input, modified, Imgproc.COLOR_RGB2YCrCb);
+
+        //copy input to output
         input.copyTo(output);
 
         //height & width
         IMG_HEIGHT = input.rows() / 2;
         IMG_WIDTH = input.cols() / 2;
-
-        //convert to YCrCb
-        cvtColor(input, modified, Imgproc.COLOR_RGB2YCrCb);
 
 
         //Retrieving green, orange, or pink rect
@@ -141,7 +142,7 @@ public class SignalPipeline extends OpenCvPipeline {
         //thresholding
         Scalar GREEN_MAX_THRESH = new Scalar(GREEN_MAX_Y, GREEN_MAX_CR, GREEN_MAX_CB);
         Scalar GREEN_MIN_THRESH = new Scalar(GREEN_MIN_Y, GREEN_MIN_CR, GREEN_MIN_CB);
-        inRange(modified, GREEN_MIN_THRESH, GREEN_MAX_THRESH, modified);
+        inRange(input, GREEN_MIN_THRESH, GREEN_MAX_THRESH, input);
 
         //finding contour
         greenContours = new ArrayList<>();
@@ -181,7 +182,7 @@ public class SignalPipeline extends OpenCvPipeline {
         //thresholding
         Scalar ORANGE_MAX_THRESH = new Scalar(ORANGE_MAX_Y, ORANGE_MAX_CR, ORANGE_MAX_CB);
         Scalar ORANGE_MIN_THRESH = new Scalar(ORANGE_MIN_Y, ORANGE_MIN_CR, ORANGE_MIN_CB);
-        inRange(modified, ORANGE_MIN_THRESH, ORANGE_MAX_THRESH, modified);
+        inRange(input, ORANGE_MIN_THRESH, ORANGE_MAX_THRESH, input);
 
         //finding contour
         orangeContours = new ArrayList<>();
@@ -215,7 +216,7 @@ public class SignalPipeline extends OpenCvPipeline {
         //thresholding
         Scalar PINK_MAX_THRESH = new Scalar(PINK_MAX_Y, PINK_MAX_CR, PINK_MAX_CB);
         Scalar PINK_MIN_THRESH = new Scalar(PINK_MIN_Y, PINK_MIN_CR, PINK_MIN_CB);
-        inRange(modified, PINK_MIN_THRESH, PINK_MAX_THRESH, modified);
+        inRange(input, PINK_MIN_THRESH, PINK_MAX_THRESH, input);
 
         //finding contour
         pinkContours = new ArrayList<>();

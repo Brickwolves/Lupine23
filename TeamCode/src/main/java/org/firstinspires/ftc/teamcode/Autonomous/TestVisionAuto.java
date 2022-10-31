@@ -20,7 +20,7 @@ public class TestVisionAuto extends LinearOpMode {
 
     //declare OpMode members
     Robot robot;
-    Camera signalCam;
+    Camera junkCam;
     private ElapsedTime runtime = new ElapsedTime();
 
 
@@ -41,7 +41,7 @@ public class TestVisionAuto extends LinearOpMode {
         multTelemetry.update();
 
         robot = new Robot();
-        signalCam = new Camera("signalCam", true);
+        junkCam = new Camera("junkCam", true);
 
 
         waitForStart();

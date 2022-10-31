@@ -12,7 +12,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 public class Camera {
 
     public SignalPipeline sigPipe = new SignalPipeline();
-    public JunctionPipeline junkPipe = new JunctionPipeline();
+    public SignalPipeline junkPipe = new SignalPipeline();
     private OpenCvCamera webcam;
     private String id;
     private boolean display2Phone;
@@ -45,7 +45,7 @@ public class Camera {
 
         // Set the pipeline depending on id
         if (id.equals("signalCam")) {webcam.setPipeline(sigPipe);}
-        else {webcam.setPipeline(junkPipe);}
+        if (id.equals("junkCam")) {webcam.setPipeline(junkPipe);}
     }
 
     public Camera(String id){
