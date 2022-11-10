@@ -11,6 +11,8 @@ public class JunctionPipeline extends OpenCvPipeline {
 //to be used for teleOp (and auto?)
 
     @Override
-    public Mat processFrame(Mat input) {return input;} //TEMPORARY
+    public Mat processFrame(Mat input) {
+        return input;
+    } //TEMPORARY
 
 }
